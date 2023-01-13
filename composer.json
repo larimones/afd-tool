@@ -1,0 +1,9 @@
+{
+  "require": {
+    "guzzlehttp/guzzle": "*",
+    "vanilla/garden-cli": "~2.0",
+    "kevinlebrun/colors.php": "1.0.*",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  }
+}
