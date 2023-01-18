@@ -6,10 +6,22 @@ class Rule
 
     private array $productions;
 
-    public function __construct($name)
+    private bool $is_final;
+
+    public function __construct($name, $is_final = false)
     {
         $this->name = $name;
+        $this->is_final = $is_final;
         $this->productions = [];
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function get_is_final(): bool
+    {
+        return $this->is_final;
     }
 
     /**
@@ -20,7 +32,8 @@ class Rule
         return $this->name;
     }
 
-    public function add_production(Production $production){
+    public function add_production(Production $production)
+    {
         $this->productions[] = $production;
     }
 
@@ -32,29 +45,36 @@ class Rule
         return $this->productions;
     }
 
-    public function getNonTerminalsByTerminals(){
+    public function getNonTerminalsByTerminals()
+    {
         //todo: fazer código certo
 
-        $terminals =[];
+        $terminals = [];
 
-        foreach ($this->productions as $production){
+        foreach ($this->productions as $production) {
             array_push($terminals, $production->getTerminal());
         }
 
         $terminals = array_unique($terminals);
 
-        return $terminals;
-        $terminals_with_non_terminals = [];
+        $array = [];
 
-        foreach ($terminals as $terminal){
-            foreach ($this->productions as $production){
-                if ($production->getTerminal() == $terminal){
-                    $terminals_with_non_terminals[] = $production->getNonTerminal();
+        foreach ($terminals as $terminal) {
+            $array2 = [];
+
+            foreach ($this->productions as $production) {
+
+                if ($production->getTerminal() == $terminal) {
+                    $array2[] = $production->getNonTerminal();
                 }
             }
+
+            $array2 = array_unique($array2);
+            array_push($array, [
+                "{$terminal}" => $array2
+            ]);
         }
 
-        //return array_unique($terminals_with_non_terminals);
+        return $array;
     }
-
 }

@@ -26,21 +26,10 @@ try {
 
     $grammar = new Grammar();
 
-    read_grammar_from_file($grammar, get_grammar_from_grammar_file($metadata));
-
     read_tokens_from_file($grammar, get_tokens_from_grammar_file($metadata));
 
-    //todo: these are all tests
+    read_grammar_from_file($grammar, get_grammar_from_grammar_file($metadata));
 
-    foreach ($grammar->get_rules() as $rule) {
-        $teste = "";
-
-        foreach ($rule->getProductions() as $prod) {
-            var_dump($rule->getNonTerminalsByTerminals());
-            $teste = "{$teste}|{$prod->get_production()}";
-        }
-
-        //print_r("{$rule->getName()} {$teste}\n");
-    }
+    print_nondeterministic_finite_automaton($grammar);
 } catch (Exception $e) {
 }
