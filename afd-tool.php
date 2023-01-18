@@ -24,11 +24,15 @@ try {
 
     $metadata = get_and_validate_grammar_file($grammar_path);
 
-    $grammar = new Grammar();
+    $grammar_from_tokens = new Grammar();
 
-    read_tokens_from_file($grammar, get_tokens_from_grammar_file($metadata));
+    read_tokens_from_file($grammar_from_tokens, get_tokens_from_grammar_file($metadata));
 
-    read_grammar_from_file($grammar, get_grammar_from_grammar_file($metadata));
+    $grammar_from_file = new Grammar();
+
+    read_grammar_from_file($grammar_from_file, get_grammar_from_grammar_file($metadata));
+
+    $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
 
     print_nondeterministic_finite_automaton($grammar);
 } catch (Exception $e) {

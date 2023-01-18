@@ -25,11 +25,28 @@ class Rule
     }
 
     /**
+     * @return void
+     */
+    public function set_is_final(bool $is_final): void
+    {
+        $this->is_final = $is_final;
+    }
+
+    /**
      * @return string
      */
     public function getName(): string
     {
         return $this->name;
+    }
+
+
+    /**
+     * @return void
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
     public function add_production(Production $production)
