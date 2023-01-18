@@ -24,61 +24,23 @@ try {
 
     $metadata = get_and_validate_grammar_file($grammar_path);
 
-    //todo: extract this to a method
-
     $grammar = new Grammar();
 
-    foreach ($metadata as $value){
-        $value = explode("::=", $value);
-        $name = StringHelper::regex("/<(.)>/i", $value[0]);
+    read_grammar_from_file($grammar, get_grammar_from_grammar_file($metadata));
 
-        $rule = new Rule($name);
-
-        $raw_productions = explode("|", $value[1]);
-
-        foreach ($raw_productions as $raw){
-            if (StringHelper::contains($raw, "ε")){
-                $production = new Production();
-                $production->setTerminal("ε");
-            }
-            else if (!StringHelper::contains($raw, ["<", ">"])){
-                $production = new Production();
-                $terminal = trim($raw);
-                $production->setTerminal($terminal);
-            }
-            else {
-                $terminal_before_non_terminal = StringHelper::regex("/(.)</i", $raw);
-                $terminal_after_non_terminal = StringHelper::regex("/>(.)/i", $raw);
-                $non_terminal = StringHelper::regex("/<(.*?)>/i", $raw);
-                $production = new Production();
-                $production->setNonTerminal($non_terminal);
-
-                if ($terminal_before_non_terminal != "" && $terminal_after_non_terminal == ""){
-                    $production->setTerminal($terminal_before_non_terminal);
-                }
-
-                if ($terminal_after_non_terminal != "" && $terminal_before_non_terminal == "") {
-                    $production->setTerminal($terminal_after_non_terminal);
-                }
-            }
-            $rule->add_production($production);
-        }
-        $grammar->add_rule($rule);
-    }
+    read_tokens_from_file($grammar, get_tokens_from_grammar_file($metadata));
 
     //todo: these are all tests
 
-    foreach ($grammar->get_rules() as $rule){
+    foreach ($grammar->get_rules() as $rule) {
         $teste = "";
 
-        foreach ($rule->getProductions() as $prod){
+        foreach ($rule->getProductions() as $prod) {
             var_dump($rule->getNonTerminalsByTerminals());
             $teste = "{$teste}|{$prod->get_production()}";
         }
 
         //print_r("{$rule->getName()} {$teste}\n");
     }
-}
-catch (Exception $e){
-
+} catch (Exception $e) {
 }
