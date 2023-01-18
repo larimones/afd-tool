@@ -8,11 +8,14 @@ class Rule
 
     private bool $is_final;
 
+    private bool $is_initial;
+
     public function __construct($name, $is_final = false)
     {
         $this->name = $name;
         $this->is_final = $is_final;
         $this->productions = [];
+        $this->is_initial = ($name == "S");
     }
 
 
@@ -22,6 +25,14 @@ class Rule
     public function get_is_final(): bool
     {
         return $this->is_final;
+    }
+
+    /**
+     * @return bool
+     */
+    public function get_is_initial(): bool
+    {
+        return $this->is_initial;
     }
 
     /**

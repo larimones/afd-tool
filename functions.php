@@ -162,6 +162,9 @@ function print_nondeterministic_finite_automaton($grammar)
         if ($rule->get_is_final() == true) {
             print("*");
         }
+        if ($rule->get_is_initial() == true) {
+            print("->");
+        }
         print(" {$rule->getName()} |");
         foreach ($rule->getNonTerminalsByTerminals() as $value) {
             print(" " . key($value) . " => { ");
