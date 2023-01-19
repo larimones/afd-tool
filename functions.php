@@ -86,8 +86,8 @@ function read_tokens_from_file(&$grammar, $metadata)
                 $rule = $grammar->get_rule_by_name("S");
 
                 $production = new Production();
-                $production->setTerminal($token_as_array[$i]);
-                $production->setNonTerminal(StringHelper::convert_number_to_alphabet($count_of_rules + 1));
+                $production->set_terminal($token_as_array[$i]);
+                $production->set_non_terminal(StringHelper::convert_number_to_alphabet($count_of_rules + 1));
 
                 $rule->add_production($production);
             } else {
@@ -95,8 +95,8 @@ function read_tokens_from_file(&$grammar, $metadata)
                 $rule = new Rule(StringHelper::convert_number_to_alphabet($count_of_rules));
 
                 $production = new Production();
-                $production->setTerminal($token_as_array[$i]);
-                $production->setNonTerminal(StringHelper::convert_number_to_alphabet($count_of_rules + 1));
+                $production->set_terminal($token_as_array[$i]);
+                $production->set_non_terminal(StringHelper::convert_number_to_alphabet($count_of_rules + 1));
 
                 $rule->add_production($production);
                 $grammar->add_rule($rule);
@@ -126,27 +126,27 @@ function read_grammar_from_file(&$grammar, $metadata)
             } else if (!StringHelper::contains($raw, ["<", ">"])) {
                 $production = new Production();
                 $terminal = trim($raw);
-                $production->setTerminal($terminal);
+                $production->set_terminal($terminal);
             } else {
                 // retirar parte de pegar da esquerda o nao terminal
                 $terminal_before_non_terminal = StringHelper::regex("/(.)</i", $raw);
                 $terminal_after_non_terminal = StringHelper::regex("/>(.)/i", $raw);
                 $non_terminal = StringHelper::regex("/<(.*?)>/i", $raw);
                 $production = new Production();
-                $production->setNonTerminal($non_terminal);
+                $production->set_non_terminal($non_terminal);
 
                 if ($terminal_before_non_terminal != "" && $terminal_after_non_terminal == "") {
-                    $production->setTerminal($terminal_before_non_terminal);
+                    $production->set_terminal($terminal_before_non_terminal);
                 }
 
                 if ($terminal_after_non_terminal != "" && $terminal_before_non_terminal == "") {
-                    $production->setTerminal($terminal_after_non_terminal);
+                    $production->set_terminal($terminal_after_non_terminal);
                 }
             }
             $rule->add_production($production);
         }
 
-        if ($rule->getName() != "S")
+        if ($rule->get_name() != "S")
             $grammar->add_rule($rule);
     }
 
@@ -165,8 +165,8 @@ function print_nondeterministic_finite_automaton($grammar)
         if ($rule->get_is_initial() == true) {
             print("->");
         }
-        print(" {$rule->getName()} |");
-        foreach ($rule->getNonTerminalsByTerminals() as $value) {
+        print(" {$rule->get_name()} |");
+        foreach ($rule->get_non_terminals_by_terminals() as $value) {
             print(" " . key($value) . " => { ");
             foreach ($value as $teste) {
                 foreach ($teste as $teste1) {
@@ -185,34 +185,34 @@ function unify_grammars($grammar1, $grammar2)
     $rules_names = [];
 
     foreach ($grammar2->get_rules() as $rule) {
-        if ($rule->getName() == "S") {
+        if ($rule->get_name() == "S") {
             continue;
         }
 
         $count_of_rules++;
         array_push($rules_names, [
-            "{$rule->getName()}" => $count_of_rules
+            "{$rule->get_name()}" => $count_of_rules
         ]);
     }
 
     foreach ($rules_names as $rule_name) {
         foreach ($grammar2->get_rules() as $rule) {
-            if ($rule->getName() == key($rule_name)) {
-                $rule->setName(StringHelper::convert_number_to_alphabet($rule_name[key($rule_name)]));
+            if ($rule->get_name() == key($rule_name)) {
+                $rule->set_name(StringHelper::convert_number_to_alphabet($rule_name[key($rule_name)]));
             }
-            foreach ($rule->getProductions() as $production) {
-                if ($production->getNonTerminal() == key($rule_name)) {
-                    $production->setNonTerminal(StringHelper::convert_number_to_alphabet($rule_name[key($rule_name)]));
+            foreach ($rule->get_productions() as $production) {
+                if ($production->get_non_terminal() == key($rule_name)) {
+                    $production->set_non_terminal(StringHelper::convert_number_to_alphabet($rule_name[key($rule_name)]));
                 }
             }
         }
     }
 
     foreach ($grammar2->get_rules() as $rule) {
-        if ($rule->getName() == "S") {
+        if ($rule->get_name() == "S") {
             $ruleSGrammar1 = $grammar1->get_rule_by_name("S");
 
-            foreach ($rule->getProductions() as $production) {
+            foreach ($rule->get_productions() as $production) {
                 $ruleSGrammar1->add_production($production);
             }
         } else {

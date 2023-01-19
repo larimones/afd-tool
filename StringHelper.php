@@ -37,65 +37,100 @@ class StringHelper
 
     public static function convert_number_to_alphabet(int $number): string
     {
-        if ($number > 27 || $number < 0) {
+        if ($number < 0) {
             throw new Exception("Error: number cannot be converted");
         }
 
-        switch ($number) {
-            case 1:
-                return 'S';
-            case 2:
-                return 'A';
-            case 3:
-                return 'B';
-            case 4:
-                return 'C';
-            case 5:
-                return 'D';
-            case 6:
-                return 'E';
-            case 7:
-                return 'F';
-            case 8:
-                return 'G';
-            case 9:
-                return 'H';
-            case 10:
-                return 'I';
-            case 11:
-                return 'J';
-            case 12:
-                return 'K';
-            case 13:
-                return 'L';
-            case 14:
-                return 'M';
-            case 15:
-                return 'N';
-            case 16:
-                return 'O';
-            case 17:
-                return 'P';
-            case 18:
-                return 'Q';
-            case 19:
-                return 'R';
-            case 20:
-                return 'S';
-            case 21:
-                return 'T';
-            case 22:
-                return 'U';
-            case 23:
-                return 'V';
-            case 24:
-                return 'W';
-            case 25:
-                return 'X';
-            case 26:
-                return 'Y';
-            case 27:
-                return 'Z';
+        $var = "";
+
+        if ($number > 26)
+            $check = $number % 26;
+        else
+            $check = $number;
+
+        for ($i = 0; $i <= $number; $i = $i + 27) {
+            switch ($check) {
+                case 1:
+                    $var = "{$var}S";
+                    break;
+                case 2:
+                    $var = "{$var}A";
+                    break;
+                case 3:
+                    $var = "{$var}B";
+                    break;
+                case 4:
+                    $var = "{$var}C";
+                    break;
+                case 5:
+                    $var = "{$var}D";
+                    break;
+                case 6:
+                    $var = "{$var}E";
+                    break;
+                case 7:
+                    $var = "{$var}F";
+                    break;
+                case 8:
+                    $var = "{$var}G";
+                    break;
+                case 9:
+                    $var = "{$var}H";
+                    break;
+                case 10:
+                    $var = "{$var}I";
+                    break;
+                case 11:
+                    $var = "{$var}J";
+                    break;
+                case 12:
+                    $var = "{$var}K";
+                    break;
+                case 13:
+                    $var = "{$var}L";
+                    break;
+                case 14:
+                    $var = "{$var}M";
+                    break;
+                case 15:
+                    $var = "{$var}N";
+                    break;
+                case 16:
+                    $var = "{$var}O";
+                    break;
+                case 17:
+                    $var = "{$var}P";
+                    break;
+                case 18:
+                    $var = "{$var}Q";
+                    break;
+                case 19:
+                    $var = "{$var}R";
+                    break;
+                case 20:
+                    $var = "{$var}T";
+                    break;
+                case 21:
+                    $var = "{$var}U";
+                    break;
+                case 22:
+                    $var = "{$var}V";
+                    break;
+                case 23:
+                    $var = "{$var}W";
+                    break;
+                case 24:
+                    $var = "{$var}X";
+                    break;
+                case 25:
+                    $var = "{$var}Y";
+                    break;
+                case 26:
+                    $var = "{$var}Z";
+                    break;
+            }
         }
+
+        return $var;
     }
 }

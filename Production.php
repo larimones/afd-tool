@@ -14,7 +14,7 @@ class Production
     /**
      * @return mixed
      */
-    public function getNonTerminal() : ?string
+    public function get_non_terminal(): ?string
     {
         return $this->non_terminal;
     }
@@ -22,7 +22,7 @@ class Production
     /**
      * @return mixed
      */
-    public function getTerminal() : ?string
+    public function get_terminal(): ?string
     {
         return $this->terminal;
     }
@@ -30,7 +30,7 @@ class Production
     /**
      * @param mixed $non_terminal
      */
-    public function setNonTerminal(string $non_terminal) : void
+    public function set_non_terminal(string $non_terminal): void
     {
         $this->non_terminal = $non_terminal;
     }
@@ -38,12 +38,12 @@ class Production
     /**
      * @param mixed $terminal
      */
-    public function setTerminal(string $terminal) : void
+    public function set_terminal(string $terminal): void
     {
         $this->terminal = $terminal;
     }
 
-    public function get_production() : ?string
+    public function get_production(): ?string
     {
         if ($this->non_terminal == null)
             return "{$this->terminal}";

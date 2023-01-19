@@ -28,7 +28,7 @@ class Grammar
     public function get_rule_by_name(string $name): ?Rule
     {
         foreach ($this->rules as $rule) {
-            if ($rule->getName() == $name) {
+            if ($rule->get_name() == $name) {
                 return $rule;
             }
         }

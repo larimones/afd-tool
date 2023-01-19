@@ -46,7 +46,7 @@ class Rule
     /**
      * @return string
      */
-    public function getName(): string
+    public function get_name(): string
     {
         return $this->name;
     }
@@ -55,7 +55,7 @@ class Rule
     /**
      * @return void
      */
-    public function setName(string $name): void
+    public function set_name(string $name): void
     {
         $this->name = $name;
     }
@@ -68,19 +68,19 @@ class Rule
     /**
      * @return array
      */
-    public function getProductions(): array
+    public function get_productions(): array
     {
         return $this->productions;
     }
 
-    public function getNonTerminalsByTerminals()
+    public function get_non_terminals_by_terminals()
     {
         //todo: fazer código certo
 
         $terminals = [];
 
         foreach ($this->productions as $production) {
-            array_push($terminals, $production->getTerminal());
+            array_push($terminals, $production->get_terminal());
         }
 
         $terminals = array_unique($terminals);
@@ -92,8 +92,8 @@ class Rule
 
             foreach ($this->productions as $production) {
 
-                if ($production->getTerminal() == $terminal) {
-                    $array2[] = $production->getNonTerminal();
+                if ($production->get_terminal() == $terminal) {
+                    $array2[] = $production->get_non_terminal();
                 }
             }
 
