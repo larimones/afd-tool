@@ -173,7 +173,7 @@ function print_nondeterministic_finite_automaton($grammar)
                     print($teste1);
                 }
             }
-            print(" },");
+            print(" } ");
         }
         print("\n");
     }

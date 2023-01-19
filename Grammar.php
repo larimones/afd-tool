@@ -34,4 +34,16 @@ class Grammar
         }
         return NULL;
     }
+
+    public function get_all_terminals()
+    {
+        $all_terminals = [];
+        foreach ($this->rules as $rule) {
+            foreach ($rule->get_productions() as $production) {
+                $all_terminals[] = $production->get_terminal();
+            }
+        }
+
+        return array_unique($all_terminals);
+    }
 }

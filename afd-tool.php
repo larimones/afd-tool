@@ -34,6 +34,41 @@ try {
 
     $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
 
-    print_nondeterministic_finite_automaton($grammar);
+    //print_nondeterministic_finite_automaton($grammar);
+
+    fopen("teste.html", "w");
+    echo ("<table border='1'><thead><td>sigma</td>\n");
+
+    $testeeee = $grammar->get_all_terminals();
+    sort($testeeee);
+    foreach ($testeeee as $terminal) {
+        echo ("<th>{$terminal}</th>\n");
+    }
+    echo ("</thead><tbody>\n");
+    foreach ($grammar->get_rules() as $rule) {
+        echo ("<tr><th>{$rule->get_name()}</th>\n");
+        $rules = $rule->get_non_terminals_by_terminals();
+        $rules[] = $testeeee;
+        array_unique($rules);
+        foreach ($rules as $value) {
+            echo ("<td>");
+            foreach ($testeeee as $terminal) {
+                if (key($value) == $terminal) {
+                    foreach ($value as $teste) {
+                        foreach ($teste as $teste1) {
+                            if ($teste[count($teste)] == $teste1) {
+                                echo ("{$teste1}");
+                            } else {
+                                echo ("{$teste1},");
+                            }
+                        }
+                    }
+                }
+            }
+            echo ("</td>");
+        }
+        echo ("</tr>\n");
+    }
+    echo ("</tbody></table>\n");
 } catch (Exception $e) {
 }
