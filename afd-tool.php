@@ -34,12 +34,15 @@ try {
 
     $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
 
-    //$afnd = generate_nondeterministic_finite_automaton($grammar);
-
-    //print_nondeterministic_finite_automaton_in_file($afnd);
-
     generate_deterministic_finite_automaton($grammar);
 
+    // esse método só escreve no cmd
     print_nondeterministic_finite_automaton_in_cmd($grammar);
+
+    // todo: esse método só coloca numa matrix
+    $afnd = generate_nondeterministic_finite_automaton($grammar);
+
+    // esse método só escreve no arquivo
+    print_nondeterministic_finite_automaton_in_file($afnd);
 } catch (Exception $e) {
 }

@@ -291,44 +291,48 @@ function unify_grammars($grammar1, $grammar2)
 function generate_deterministic_finite_automaton($grammar)
 {
     $terminals = $grammar->get_all_terminals();
-    $rules = $grammar->get_rules();
+    $rule_count = 0;
 
-    foreach ($rules as $rule) {
-        foreach ($rule->get_non_terminals_by_terminals($terminals) as $transition) {
-            $key = key($transition);
+    while ($rule_count < count($grammar->get_rules())) {
+        $rules = $grammar->get_rules();
+        $rule_count = count($rules);
+        foreach ($rules as $rule) {
+            foreach ($rule->get_non_terminals_by_terminals($terminals) as $transition) {
+                $key = key($transition);
 
-            foreach ($transition as $teste) {
-                $value = array_values($teste);
-                if (count($value) > 1) {
-                    $rules_names = [];
-                    foreach ($value as $state) {
-                        $rule->remove_production_by_terminal_and_non_terminal($key, $state);
-                        $rules_names[] = $state;
-                    }
-
-                    $new_rule_name = "[" . join($rules_names) . "]";
-
-                    $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
-                    if ($verify_rule_existence == NULL) {
-
-                        $new_rule = new Rule($new_rule_name);
-
-                        foreach ($rules_names as $rule_name) {
-                            $produtions = $grammar->get_rule_by_name($rule_name)->get_productions();
-
-                            foreach ($produtions as $production) {
-                                $new_rule->add_production($production);
-                            }
+                foreach ($transition as $teste) {
+                    $value = array_values($teste);
+                    if (count($value) > 1) {
+                        $rules_names = [];
+                        foreach ($value as $state) {
+                            $rule->remove_production_by_terminal_and_non_terminal($key, $state);
+                            $rules_names[] = $state;
                         }
 
-                        $grammar->add_rule($new_rule);
+                        $new_rule_name = "[" . join($rules_names) . "]";
+
+                        $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
+                        if ($verify_rule_existence == NULL) {
+
+                            $new_rule = new Rule($new_rule_name);
+
+                            foreach ($rules_names as $rule_name) {
+                                $produtions = $grammar->get_rule_by_name($rule_name)->get_productions();
+
+                                foreach ($produtions as $production) {
+                                    $new_rule->add_production($production);
+                                }
+                            }
+
+                            $grammar->add_rule($new_rule);
+                        }
+
+                        $new_production = new Production();
+                        $new_production->set_terminal($key);
+                        $new_production->set_non_terminal($new_rule_name);
+
+                        $rule->add_production($new_production);
                     }
-
-                    $new_production = new Production();
-                    $new_production->set_terminal($key);
-                    $new_production->set_non_terminal($new_rule_name);
-
-                    $rule->add_production($new_production);
                 }
             }
         }
