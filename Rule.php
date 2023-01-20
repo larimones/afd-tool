@@ -116,4 +116,19 @@ class Rule
             }
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function is_dead(): bool
+    {
+        $reachable_states = [];
+        foreach ($this->productions as $production) {
+            $reachable_states[] = $production->get_non_terminal();
+        }
+
+        array_unique($reachable_states);
+
+        return (count($reachable_states) == 1 && $reachable_states[0] == $this->get_name()) ? true : false;
+    }
 }
