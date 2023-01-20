@@ -34,8 +34,12 @@ try {
 
     $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
 
-    $afnd = create_nondeterministic_finite_automaton($grammar);
+    //$afnd = generate_nondeterministic_finite_automaton($grammar);
 
-    print_nondeterministic_finite_automaton_in_file($afnd);
+    //print_nondeterministic_finite_automaton_in_file($afnd);
+
+    generate_deterministic_finite_automaton($grammar);
+
+    print_nondeterministic_finite_automaton_in_cmd($grammar);
 } catch (Exception $e) {
 }

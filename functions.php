@@ -156,6 +156,7 @@ function read_grammar_from_file(&$grammar, $metadata)
 
 function print_nondeterministic_finite_automaton_in_cmd($grammar)
 {
+    $terminals = $grammar->get_all_terminals();
     //todo: these are all tests for the afnd table, it needs a refact asap
 
     foreach ($grammar->get_rules() as $rule) {
@@ -166,7 +167,7 @@ function print_nondeterministic_finite_automaton_in_cmd($grammar)
             print("->");
         }
         print(" {$rule->get_name()} |");
-        foreach ($rule->get_non_terminals_by_terminals() as $value) {
+        foreach ($rule->get_non_terminals_by_terminals($terminals) as $value) {
             print(" " . key($value) . " => { ");
             foreach ($value as $teste) {
                 foreach ($teste as $teste1) {
@@ -179,7 +180,7 @@ function print_nondeterministic_finite_automaton_in_cmd($grammar)
     }
 }
 
-function create_nondeterministic_finite_automaton($grammar)
+function generate_nondeterministic_finite_automaton($grammar)
 {
     $terminals = $grammar->get_all_terminals();
     $rules = $grammar->get_rules();
@@ -285,4 +286,51 @@ function unify_grammars($grammar1, $grammar2)
     }
 
     return $grammar1;
+}
+
+function generate_deterministic_finite_automaton($grammar)
+{
+    $terminals = $grammar->get_all_terminals();
+    $rules = $grammar->get_rules();
+
+    foreach ($rules as $rule) {
+        foreach ($rule->get_non_terminals_by_terminals($terminals) as $transition) {
+            $key = key($transition);
+
+            foreach ($transition as $teste) {
+                $value = array_values($teste);
+                if (count($value) > 1) {
+                    $rules_names = [];
+                    foreach ($value as $state) {
+                        $rule->remove_production_by_terminal_and_non_terminal($key, $state);
+                        $rules_names[] = $state;
+                    }
+
+                    $new_rule_name = "[" . join($rules_names) . "]";
+
+                    $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
+                    if ($verify_rule_existence == NULL) {
+
+                        $new_rule = new Rule($new_rule_name);
+
+                        foreach ($rules_names as $rule_name) {
+                            $produtions = $grammar->get_rule_by_name($rule_name)->get_productions();
+
+                            foreach ($produtions as $production) {
+                                $new_rule->add_production($production);
+                            }
+                        }
+
+                        $grammar->add_rule($new_rule);
+                    }
+
+                    $new_production = new Production();
+                    $new_production->set_terminal($key);
+                    $new_production->set_non_terminal($new_rule_name);
+
+                    $rule->add_production($new_production);
+                }
+            }
+        }
+    }
 }

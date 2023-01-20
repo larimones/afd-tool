@@ -95,6 +95,8 @@ class Rule
 
             $array2 = array_unique($array2);
 
+            sort($array2);
+
             array_push($array, [
                 "{$terminal}" => $array2
             ]);
@@ -103,5 +105,15 @@ class Rule
         arsort($array);
 
         return $array;
+    }
+
+    public function remove_production_by_terminal_and_non_terminal($terminal, $non_terminal)
+    {
+        for ($i = 0; $i < count($this->productions); $i++) {
+            if ($this->productions[$i]->get_terminal() == $terminal && $this->productions[$i]->get_non_terminal() == $non_terminal) {
+                unset($this->productions[$i]);
+                Sort($this->productions);
+            }
+        }
     }
 }
