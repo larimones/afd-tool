@@ -44,5 +44,8 @@ try {
 
     // esse método só escreve no arquivo
     print_nondeterministic_finite_automaton_in_file($afnd);
+
+    var_dump($grammar->get_unreachable_rules());
+    var_dump($grammar->get_dead_rules());
 } catch (Exception $e) {
 }

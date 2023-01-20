@@ -127,8 +127,8 @@ class Rule
             $reachable_states[] = $production->get_non_terminal();
         }
 
-        array_unique($reachable_states);
+        $reachable_states = array_unique($reachable_states);
 
-        return (count($reachable_states) == 1 && $reachable_states[0] == $this->get_name()) ? true : false;
+        return (count($reachable_states) == 1 && in_array($this->name, $reachable_states)) ? true : false;
     }
 }
