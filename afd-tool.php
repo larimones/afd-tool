@@ -34,6 +34,8 @@ try {
 
     $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
 
-    print_nondeterministic_finite_automaton_in_file($grammar);
+    $afnd = create_nondeterministic_finite_automaton($grammar);
+
+    print_nondeterministic_finite_automaton_in_file($afnd);
 } catch (Exception $e) {
 }

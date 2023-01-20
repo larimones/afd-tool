@@ -179,49 +179,67 @@ function print_nondeterministic_finite_automaton_in_cmd($grammar)
     }
 }
 
-function print_nondeterministic_finite_automaton_in_file($grammar)
+function create_nondeterministic_finite_automaton($grammar)
 {
-    $fp = fopen('nondeterministic_finite_automaton.html', 'w');
-
-    fwrite($fp, "<table border='1'><thead><th>$</th>");
-
     $terminals = $grammar->get_all_terminals();
+    $rules = $grammar->get_rules();
 
+    $matrix[0][0] = '$';
+
+    $i = 1;
     foreach ($terminals as $terminal) {
-        fwrite($fp, "<th>{$terminal}</th>");
+        $matrix[0][$i] = $terminal;
+        $i++;
     }
 
-    fwrite($fp, "<tbody>");
-
-    foreach ($grammar->get_rules() as $rule) {
-        fwrite($fp, "<tr><td>");
-
+    $i = 1;
+    foreach ($rules as $rule) {
+        $string = "";
         if ($rule->get_is_final()) {
-            fwrite($fp, "*");
+            $string = "*";
         }
 
         if ($rule->get_is_initial()) {
-            fwrite($fp, "->");
+            $string = "->";
         }
 
-        fwrite($fp, "{$rule->get_name()}</td>");
+        $string = "{$string}{$rule->get_name()}";
+
+        $matrix[$i][0] = $string;
+
         $transitions = $rule->get_non_terminals_by_terminals($terminals);
 
+        $j = 1;
         foreach ($transitions as $transition) {
-            fwrite($fp, "<td>");
 
             foreach ($transition as $next_rules) {
+                $string = "";
                 foreach ($next_rules as $next_rule) {
-                    fwrite($fp, $next_rule);
+                    $string = "{$string} {$next_rule}";
                 }
             }
-            fwrite($fp, "</td>");
+            $matrix[$i][$j] = $string;
+            $j++;
         }
-        fwrite($fp, "<tr>");
+        $i++;
     }
 
-    fwrite($fp, "</tbody></table>");
+    return $matrix;
+}
 
+
+function print_nondeterministic_finite_automaton_in_file($matrix)
+{
+    $fp = fopen('nondeterministic_finite_automaton.html', 'w');
+    fwrite($fp, "<table border='1'>");
+    foreach ($matrix as $row) {
+        fwrite($fp, "<tr>");
+        foreach ($row as $col) {
+            fwrite($fp, "<td>{$col}</td>");
+        }
+        fwrite($fp, "</tr>");
+    }
+    fwrite($fp, "</table>");
     fclose($fp);
 }
 
