@@ -73,35 +73,34 @@ class Rule
         return $this->productions;
     }
 
-    public function get_non_terminals_by_terminals()
+    public function get_non_terminals_by_terminals($terminals)
     {
         //todo: fazer código certo
-
-        $terminals = [];
-
-        foreach ($this->productions as $production) {
-            array_push($terminals, $production->get_terminal());
-        }
-
-        $terminals = array_unique($terminals);
 
         $array = [];
 
         foreach ($terminals as $terminal) {
             $array2 = [];
+            $found = false;
 
             foreach ($this->productions as $production) {
-
                 if ($production->get_terminal() == $terminal) {
+                    $found = true;
                     $array2[] = $production->get_non_terminal();
                 }
             }
 
+            if (!$found)
+                $array2[] = "-";
+
             $array2 = array_unique($array2);
+
             array_push($array, [
                 "{$terminal}" => $array2
             ]);
         }
+
+        arsort($array);
 
         return $array;
     }

@@ -44,6 +44,10 @@ class Grammar
             }
         }
 
-        return array_unique($all_terminals);
+        $all_terminals = array_unique($all_terminals);
+
+        sort($all_terminals);
+
+        return $all_terminals;
     }
 }

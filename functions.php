@@ -11,25 +11,25 @@ use Colors\Color;
 function yellow($str, $eol = false)
 {
     $c = new Color();
-    echo $c($str)->yellow . ($eol ? PHP_EOL : '') . "\n";
+    echo (($str)->yellow . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function magenta($str, $eol = false)
 {
     $c = new Color();
-    echo $c($str)->magenta . ($eol ? PHP_EOL : '') . "\n";
+    echo (($str)->magenta . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function green($str, $eol = false)
 {
     $c = new Color();
-    echo $c($str)->green . ($eol ? PHP_EOL : '') . "\n";
+    echo (($str)->green . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function white($str, $eol = false)
 {
     $c = new Color();
-    echo $c($str)->white . ($eol ? PHP_EOL : '') . "\n";
+    echo (($str)->white . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function get_and_validate_grammar_file($path)
@@ -154,7 +154,7 @@ function read_grammar_from_file(&$grammar, $metadata)
 }
 
 
-function print_nondeterministic_finite_automaton($grammar)
+function print_nondeterministic_finite_automaton_in_cmd($grammar)
 {
     //todo: these are all tests for the afnd table, it needs a refact asap
 
@@ -177,6 +177,52 @@ function print_nondeterministic_finite_automaton($grammar)
         }
         print("\n");
     }
+}
+
+function print_nondeterministic_finite_automaton_in_file($grammar)
+{
+    $fp = fopen('nondeterministic_finite_automaton.html', 'w');
+
+    fwrite($fp, "<table border='1'><thead><th>$</th>");
+
+    $terminals = $grammar->get_all_terminals();
+
+    foreach ($terminals as $terminal) {
+        fwrite($fp, "<th>{$terminal}</th>");
+    }
+
+    fwrite($fp, "<tbody>");
+
+    foreach ($grammar->get_rules() as $rule) {
+        fwrite($fp, "<tr><td>");
+
+        if ($rule->get_is_final()) {
+            fwrite($fp, "*");
+        }
+
+        if ($rule->get_is_initial()) {
+            fwrite($fp, "->");
+        }
+
+        fwrite($fp, "{$rule->get_name()}</td>");
+        $transitions = $rule->get_non_terminals_by_terminals($terminals);
+
+        foreach ($transitions as $transition) {
+            fwrite($fp, "<td>");
+
+            foreach ($transition as $next_rules) {
+                foreach ($next_rules as $next_rule) {
+                    fwrite($fp, $next_rule);
+                }
+            }
+            fwrite($fp, "</td>");
+        }
+        fwrite($fp, "<tr>");
+    }
+
+    fwrite($fp, "</tbody></table>");
+
+    fclose($fp);
 }
 
 function unify_grammars($grammar1, $grammar2)
