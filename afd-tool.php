@@ -34,16 +34,19 @@ try {
 
     $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
 
+    //print_grammar_in_cmd($grammar);
+
+    $afnd = convert_grammar_into_matrix($grammar);
+
+    print_matrix_into_file($afnd, "non_deterministic_finite_automaton");
+
     generate_deterministic_finite_automaton($grammar);
 
-    // esse método só escreve no cmd
-    print_nondeterministic_finite_automaton_in_cmd($grammar);
+    //print_grammar_in_cmd($grammar);
 
-    // todo: esse método só coloca numa matrix
-    $afnd = generate_nondeterministic_finite_automaton($grammar);
+    $afd = convert_grammar_into_matrix($grammar);
 
-    // esse método só escreve no arquivo
-    print_nondeterministic_finite_automaton_in_file($afnd);
+    print_matrix_into_file($afd, "deterministic_finite_automaton");
 
     var_dump($grammar->get_unreachable_rules());
     var_dump($grammar->get_dead_rules());

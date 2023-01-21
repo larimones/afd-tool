@@ -153,8 +153,7 @@ function read_grammar_from_file(&$grammar, $metadata)
     return $grammar;
 }
 
-
-function print_nondeterministic_finite_automaton_in_cmd($grammar)
+function print_grammar_in_cmd($grammar)
 {
     $terminals = $grammar->get_all_terminals();
     //todo: these are all tests for the afnd table, it needs a refact asap
@@ -180,7 +179,7 @@ function print_nondeterministic_finite_automaton_in_cmd($grammar)
     }
 }
 
-function generate_nondeterministic_finite_automaton($grammar)
+function convert_grammar_into_matrix($grammar)
 {
     $terminals = $grammar->get_all_terminals();
     $rules = $grammar->get_rules();
@@ -216,7 +215,7 @@ function generate_nondeterministic_finite_automaton($grammar)
             foreach ($transition as $next_rules) {
                 $string = "";
                 foreach ($next_rules as $next_rule) {
-                    $string = "{$string} {$next_rule}";
+                    $string = "{$string}{$next_rule}";
                 }
             }
             $matrix[$i][$j] = $string;
@@ -228,10 +227,9 @@ function generate_nondeterministic_finite_automaton($grammar)
     return $matrix;
 }
 
-
-function print_nondeterministic_finite_automaton_in_file($matrix)
+function print_matrix_into_file($matrix, $file_name)
 {
-    $fp = fopen('nondeterministic_finite_automaton.html', 'w');
+    $fp = fopen("{$file_name}.html", 'w');
     fwrite($fp, "<table border='1'>");
     foreach ($matrix as $row) {
         fwrite($fp, "<tr>");
@@ -317,7 +315,13 @@ function generate_deterministic_finite_automaton($grammar)
                             $new_rule = new Rule($new_rule_name);
 
                             foreach ($rules_names as $rule_name) {
-                                $produtions = $grammar->get_rule_by_name($rule_name)->get_productions();
+                                $reference_rule = $grammar->get_rule_by_name($rule_name);
+
+                                if ($reference_rule->get_is_final()) {
+                                    $new_rule->set_is_final(true);
+                                }
+
+                                $produtions = $reference_rule->get_productions();
 
                                 foreach ($produtions as $production) {
                                     $new_rule->add_production($production);
