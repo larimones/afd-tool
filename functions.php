@@ -156,7 +156,6 @@ function read_grammar_from_file(&$grammar, $metadata)
 function print_grammar_in_cmd($grammar)
 {
     $terminals = $grammar->get_all_terminals();
-    //todo: these are all tests for the afnd table, it needs a refact asap
 
     foreach ($grammar->get_rules() as $rule) {
         if ($rule->get_is_final() == true) {
@@ -164,6 +163,12 @@ function print_grammar_in_cmd($grammar)
         }
         if ($rule->get_is_initial() == true) {
             print("->");
+        }
+        if ($rule->is_dead() == true) {
+            print("+");
+        }
+        if (json_encode($rule->get_is_reachable()) == "false") {
+            print("+");
         }
         print(" {$rule->get_name()} |");
         foreach ($rule->get_non_terminals_by_terminals($terminals) as $value) {
@@ -195,15 +200,24 @@ function convert_grammar_into_matrix($grammar)
     $i = 1;
     foreach ($rules as $rule) {
         $string = "";
+
+        if (json_encode($rule->get_is_reachable()) == "false") {
+            $string .= "o";
+        }
+
+        if ($rule->is_dead()) {
+            $string .= "+";
+        }
+
         if ($rule->get_is_final()) {
-            $string = "*";
+            $string .= "*";
         }
 
         if ($rule->get_is_initial()) {
-            $string = "->";
+            $string .= "->";
         }
 
-        $string = "{$string}{$rule->get_name()}";
+        $string = "{$string} {$rule->get_name()}";
 
         $matrix[$i][0] = $string;
 
@@ -227,18 +241,47 @@ function convert_grammar_into_matrix($grammar)
     return $matrix;
 }
 
-function print_matrix_into_file($matrix, $file_name)
+function print_matrix_into_file($matrix, $file_name, $title)
 {
     $fp = fopen("{$file_name}.html", 'w');
-    fwrite($fp, "<table border='1'>");
+    fwrite($fp, "<html><head><meta charset='UTF-8'></head><body>");
+    fwrite($fp, "<table style='text-align: center; margin:auto;'><tr><td>Universidade Federal Da Fronteira Sul</td></tr><tr><td>Componente Curricular: Linguagens formais e autômatos</td></tr><tr><td>Professor(a):	Braulio Adriano de Mello</td></tr><tr><td>Acadêmicos(as): Larissa Mones e Matheus Vieira</td></tr><tr><td>Curso: Ciência Da Computação</td></tr></table>");
+    fwrite($fp, "<br />");
+    fwrite($fp, "<h2 style='text-align: center; margin:auto;'>{$title}</h2>");
+    fwrite($fp, "<br />");
+    fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >");
     foreach ($matrix as $row) {
         fwrite($fp, "<tr>");
         foreach ($row as $col) {
-            fwrite($fp, "<td>{$col}</td>");
+            fwrite($fp, "<td width='100px'>{$col}</td>");
         }
         fwrite($fp, "</tr>");
     }
     fwrite($fp, "</table>");
+    fwrite($fp, "<br />");
+    fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >
+    <tr>
+        <td colspan='2'>Legenda</td>
+    </tr>
+    <tr>
+        <td width='50px'>-&gt;</td>
+        <td width='200px'>Estado Inicial</td>
+    </tr>
+    <tr>
+        <td>*</td>
+        <td>Estado Final</td>
+    </tr>
+    <tr>
+        <td>o</td>
+        <td>Estado Inalcançável</td>
+    </tr>
+    <tr>
+        <td>+</td>
+        <td>Estado Morto</td>
+    </tr>
+</table>");
+    fwrite($fp, "</body></html>");
+
     fclose($fp);
 }
 
@@ -339,6 +382,21 @@ function generate_deterministic_finite_automaton($grammar)
                     }
                 }
             }
+        }
+    }
+
+    set_unreachable_rules($grammar);
+}
+
+function set_unreachable_rules($grammar){
+    $unreachable_rules = $grammar->get_unreachable_rules();
+
+    foreach ($grammar->get_rules() as $rule){
+        if (in_array($rule->get_name(), $unreachable_rules)){
+            $rule->set_is_reachable(false);
+        }
+        else{
+            $rule->set_is_reachable(true);
         }
     }
 }

@@ -10,6 +10,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Garden\Cli\Cli;
 
 try {
+
     error_reporting(E_ERROR | E_PARSE);
 
     $cli = new Cli();
@@ -38,7 +39,7 @@ try {
 
     $afnd = convert_grammar_into_matrix($grammar);
 
-    print_matrix_into_file($afnd, "non_deterministic_finite_automaton");
+    print_matrix_into_file($afnd, "non_deterministic_finite_automaton", "Autômato Finito Não Determinístico");
 
     generate_deterministic_finite_automaton($grammar);
 
@@ -46,9 +47,7 @@ try {
 
     $afd = convert_grammar_into_matrix($grammar);
 
-    print_matrix_into_file($afd, "deterministic_finite_automaton");
+    print_matrix_into_file($afd, "deterministic_finite_automaton", "Autômato Finito Determinístico");
 
-    var_dump($grammar->get_unreachable_rules());
-    var_dump($grammar->get_dead_rules());
 } catch (Exception $e) {
 }

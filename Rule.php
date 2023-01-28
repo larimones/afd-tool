@@ -9,6 +9,7 @@ class Rule
     private bool $is_final;
 
     private bool $is_initial;
+    private ?bool $is_reachable;
 
     public function __construct($name, $is_final = false)
     {
@@ -16,6 +17,7 @@ class Rule
         $this->is_final = $is_final;
         $this->productions = [];
         $this->is_initial = ($name == "S");
+        $this->is_reachable = NULL;
     }
 
 
@@ -130,5 +132,13 @@ class Rule
         $reachable_states = array_unique($reachable_states);
 
         return (count($reachable_states) == 1 && in_array($this->name, $reachable_states)) ? true : false;
+    }
+
+    public function get_is_reachable() : ?bool {
+        return $this->is_reachable;
+    }
+
+    public function set_is_reachable($is_reachable) : void {
+        $this->is_reachable = $is_reachable;
     }
 }
