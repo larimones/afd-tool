@@ -372,7 +372,13 @@ function generate_deterministic_finite_automaton($grammar)
 
                     $new_rule = new Rule($new_rule_name);
 
-                    foreach ($non_terminals as $non_terminal) {
+                    $i =0;
+                    while (true) {
+                        if (!array_key_exists($i, $non_terminals)){
+                            break;
+                        }
+
+                        $non_terminal = $non_terminals[$i];
                         $reference_rule = $grammar->get_rule_by_name($non_terminal);
 
                         if ($reference_rule->get_is_final()) {
@@ -380,10 +386,19 @@ function generate_deterministic_finite_automaton($grammar)
                         }
 
                         foreach ($reference_rule->get_productions() as $production) {
-                            if ($new_rule->get_production_by_terminal_and_non_terminal($production->get_terminal(), $production->get_non_terminal()) == null) {
+                            if (StringHelper::contains($production->get_non_terminal(), "[")){
+                                $replace = str_replace("[", "", $production->get_non_terminal());
+                                $replace = str_replace("]", "", $replace);
+
+                                foreach ($replace as $state){
+                                    $non_terminals[] = $state;
+                                }
+                            }
+                            else if ($new_rule->get_production_by_terminal_and_non_terminal($production->get_terminal(), $production->get_non_terminal()) == null) {
                                 $new_rule->add_production($production);
                             }
                         }
+                        $i++;
                     }
 
                     $grammar->add_rule($new_rule);
