@@ -349,11 +349,11 @@ function generate_deterministic_finite_automaton($grammar)
 {
     $terminals = $grammar->get_all_terminals();
 
-    $j =0;
+    $j = 0;
     while (true) {
         $rules = $grammar->get_rules();
 
-        if (!array_key_exists($j, $rules)){
+        if (!array_key_exists($j, $rules)) {
             break;
         }
 
@@ -380,9 +380,9 @@ function generate_deterministic_finite_automaton($grammar)
 
                     $new_rule = new Rule($new_rule_name);
 
-                    $i =0;
+                    $i = 0;
                     while (true) {
-                        if (!array_key_exists($i, $non_terminals)){
+                        if (!array_key_exists($i, $non_terminals)) {
                             break;
                         }
 
@@ -394,15 +394,9 @@ function generate_deterministic_finite_automaton($grammar)
                         }
 
                         foreach ($reference_rule->get_productions() as $production) {
-                            if (StringHelper::contains($production->get_non_terminal(), "[")){
-                                $replace = str_replace("[", "", $production->get_non_terminal());
-                                $replace = str_replace("]", "", $replace);
-
-                                foreach ($replace as $state){
-                                    $non_terminals[] = $state;
-                                }
-                            }
-                            else if ($new_rule->get_production_by_terminal_and_non_terminal($production->get_terminal(), $production->get_non_terminal()) == null) {
+                            if (StringHelper::contains($production->get_non_terminal(), "[")) {
+                                $non_terminals[] = $production->get_non_terminal();
+                            } else if ($new_rule->get_production_by_terminal_and_non_terminal($production->get_terminal(), $production->get_non_terminal()) == null) {
                                 $new_rule->add_production($production);
                             }
                         }
