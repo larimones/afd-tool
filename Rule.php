@@ -157,7 +157,14 @@ class Rule
         $this->is_reachable = $is_reachable;
     }
 
-    public function remove_all_productions() : void {
-        $this->productions = [];
+    public function remove_all_productions_by_terminal($terminal) : void {
+        foreach ($this->productions as $production){
+            if ($production->get_terminal() == $terminal){
+                $index = array_search($production, $this->productions);
+
+                unset($this->productions[$index]);
+                sort($this->productions);
+            }
+        }
     }
 }

@@ -392,7 +392,7 @@ function generate_deterministic_finite_automaton($grammar)
                 $new_production->set_terminal($terminal);
                 $new_production->set_non_terminal($new_rule_name);
 
-                $rule->remove_all_productions();
+                $rule->remove_all_productions_by_terminal($terminal);
 
                 $rule->add_production($new_production);
             }
