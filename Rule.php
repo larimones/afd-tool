@@ -122,6 +122,18 @@ class Rule
         }
     }
 
+    public function get_production_by_terminal_and_non_terminal($terminal, $non_terminal)
+    {
+        foreach ($this->productions as $production){
+            if ($production->get_terminal() == $terminal && $production->get_non_terminal() == $non_terminal) {
+
+                return $production;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @return bool
      */
@@ -143,5 +155,9 @@ class Rule
 
     public function set_is_reachable($is_reachable) : void {
         $this->is_reachable = $is_reachable;
+    }
+
+    public function remove_all_productions() : void {
+        $this->productions = [];
     }
 }

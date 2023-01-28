@@ -73,11 +73,11 @@ function get_grammar_from_grammar_file($metadata)
 
 // refact pls
 
-function read_tokens_from_file(&$grammar, $metadata)
+function read_tokens_from_file(&$grammar, $tokens)
 {
     $count_of_rules = count($grammar->get_rules());
 
-    foreach ($metadata as $token) {
+    foreach ($tokens as $token) {
         $token = trim($token);
         $token_as_array = array_filter(str_split($token));
 
@@ -349,93 +349,55 @@ function generate_deterministic_finite_automaton($grammar)
 {
     $terminals = $grammar->get_all_terminals();
 
-    do {
-        $rules = $grammar->get_rules();
-        $rule_count = count($rules);
-        $should_delete_productions = false;
-        foreach ($rules as $rule) {
-            $afnd = $rule->get_non_terminals_by_terminals($terminals);
-            foreach ($afnd as $transitions) {
-                $terminal = key($transitions);
+    foreach ($grammar->get_rules() as $rule) {
+        $rules_to_apply_algorithm--;
+        $non_terminals_by_terminals = $rule->get_non_terminals_by_terminals($terminals);
+        foreach ($non_terminals_by_terminals as $non_terminals_by_terminal) {
+            $terminal = key($non_terminals_by_terminal);
 
-                foreach ($transitions as $transition) {
-                    $non_terminals_in_transition = array_values($transition);
+            $non_terminals = array_values($non_terminals_by_terminal)[0];
 
-                    if (count($non_terminals_in_transition) == 1 and !StringHelper::contains($non_terminals_in_transition[0], "[")) {
-                        continue;
-                    } else if (count($non_terminals_in_transition) == 1 and StringHelper::contains($non_terminals_in_transition[0], "[")) {
-                        $rule->remove_production_by_terminal_and_non_terminal($terminal, $non_terminals_in_transition[0]);
+            if (count($non_terminals) < 1) {
+                continue;
+            } else {
 
-                        $non_terminals_in_transition[0] = str_replace("]", "", $non_terminals_in_transition[0]);
-                        $non_terminals_in_transition[0] = str_replace("[", "", $non_terminals_in_transition[0]);
+                if (count($non_terminals) == 1 and $non_terminals[0] == "-") {
+                    continue;
+                }
 
-                        foreach (str_split($non_terminals_in_transition[0]) as $rule_name) {
-                            $rules_names[] = $rule_name;
+                $new_rule_name = "[" . join($non_terminals) . "]";
+
+                $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
+                if ($verify_rule_existence == NULL) {
+
+                    $new_rule = new Rule($new_rule_name);
+
+                    foreach ($non_terminals as $non_terminal) {
+                        $reference_rule = $grammar->get_rule_by_name($non_terminal);
+
+                        if ($reference_rule->get_is_final()) {
+                            $new_rule->set_is_final(true);
                         }
-                    } else if (count($non_terminals_in_transition) > 1) {
-                        $rules_names = [];
-                        foreach ($rule->get_productions() as $production) {
-                            foreach (array_filter($non_terminals_in_transition) as $state) {
-                                if ($production->get_terminal() == $terminal and $production->get_non_terminal() == $state) {
-                                    $rules_names[] = $state;
-                                }
-                            }
-                        }
-                    } else {
-                        continue;
-                    }
 
-                    $array_for_name = array_unique($rules_names);
-                    sort($array_for_name);
-
-                    $new_rule_name = "[" . join($array_for_name) . "]";
-
-                    $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
-                    if ($verify_rule_existence == NULL) {
-
-                        $new_rule = new Rule($new_rule_name);
-
-                        while ($rule_name_count < count($rules_names)) {
-                            $rule_name_count = count($rules_names);
-                            $reference_rule = $grammar->get_rule_by_name($rule_name);
-
-                            if ($reference_rule->get_is_final()) {
-                                $new_rule->set_is_final(true);
-                            }
-
-                            $produtions = $reference_rule->get_productions();
-
-                            foreach ($produtions as $production) {
-                                $teste = $production->get_non_terminal();
-                                if (StringHelper::contains($teste, "[")) {
-                                    $teste = str_replace("]", "", $teste);
-                                    $teste = str_replace("[", "", $teste);
-
-                                    foreach (str_split($teste) as $teste1) {
-                                        $rules_names[] = $teste1;
-                                        $rule_name_count++;
-                                    }
-                                    $rules_names = array_unique($rules_names);
-                                } else {
-                                    $new_rule->add_production($production);
-                                }
+                        foreach ($reference_rule->get_productions() as $production) {
+                            if ($new_rule->get_production_by_terminal_and_non_terminal($production->get_terminal(), $production->get_non_terminal()) == null) {
+                                $new_rule->add_production($production);
                             }
                         }
                     }
 
                     $grammar->add_rule($new_rule);
                 }
-
                 $new_production = new Production();
                 $new_production->set_terminal($terminal);
                 $new_production->set_non_terminal($new_rule_name);
 
+                $rule->remove_all_productions();
+
                 $rule->add_production($new_production);
-                $rules_names = [];
             }
         }
-    } while ($rule_count < count($grammar->get_rules()));
-
+    }
     set_unreachable_rules($grammar);
 }
 
