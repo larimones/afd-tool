@@ -349,8 +349,16 @@ function generate_deterministic_finite_automaton($grammar)
 {
     $terminals = $grammar->get_all_terminals();
 
-    foreach ($grammar->get_rules() as $rule) {
-        $rules_to_apply_algorithm--;
+    $j =0;
+    while (true) {
+        $rules = $grammar->get_rules();
+
+        if (!array_key_exists($j, $rules)){
+            break;
+        }
+
+        $rule = $rules[$j];
+
         $non_terminals_by_terminals = $rule->get_non_terminals_by_terminals($terminals);
         foreach ($non_terminals_by_terminals as $non_terminals_by_terminal) {
             $terminal = key($non_terminals_by_terminal);
@@ -412,6 +420,7 @@ function generate_deterministic_finite_automaton($grammar)
                 $rule->add_production($new_production);
             }
         }
+        $j++;
     }
     set_unreachable_rules($grammar);
 }
