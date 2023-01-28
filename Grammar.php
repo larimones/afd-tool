@@ -25,7 +25,7 @@ class Grammar
         return $this->rules;
     }
 
-    public function get_rule_by_name(string $name): ?Rule
+    public function get_rule_by_name(?string $name): ?Rule
     {
         foreach ($this->rules as $rule) {
             if ($rule->get_name() == $name) {
@@ -76,7 +76,9 @@ class Grammar
             $reachable_states[] = $production->get_non_terminal();
         }
 
-        if (count($reachable_states) != 0) {
+        $reachable_states = array_filter(array_unique($reachable_states));
+
+        if (count($reachable_states) > 0) {
             do {
                 foreach ($reachable_states as $rule_name) {
                     $initial_count = count($reachable_states);
@@ -85,6 +87,8 @@ class Grammar
                     foreach ($rule->get_productions() as $production) {
                         $reachable_states[] = $production->get_non_terminal();
                     }
+
+                    $reachable_states = array_filter(array_unique($reachable_states));
                 }
             } while (count($reachable_states) > $initial_count);
         }

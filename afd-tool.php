@@ -25,15 +25,26 @@ try {
 
     $metadata = get_and_validate_grammar_file($grammar_path);
 
-    $grammar_from_tokens = new Grammar();
+    $tokens = get_tokens_from_grammar_file($metadata);
+    if (count($tokens) > 0){
+        $grammar_from_tokens = new Grammar();
+        read_tokens_from_file($grammar_from_tokens, $tokens);
+    }
 
-    read_tokens_from_file($grammar_from_tokens, get_tokens_from_grammar_file($metadata));
+    $grammar_from_file_as_array = get_grammar_from_grammar_file($metadata);
+    if (count($grammar_from_file_as_array) > 0){
+        $grammar_from_file = new Grammar();
+        read_grammar_from_file($grammar_from_file, $grammar_from_file_as_array);
+    }
 
-    $grammar_from_file = new Grammar();
-
-    read_grammar_from_file($grammar_from_file, get_grammar_from_grammar_file($metadata));
-
-    $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
+    if (!isset($grammar_from_tokens) and isset($grammar_from_file)){
+        $grammar = $grammar_from_file;
+    } elseif (isset($grammar_from_tokens) and !isset($grammar_from_file)) {
+        $grammar = $grammar_from_tokens;
+    }
+    else {
+        $grammar = unify_grammars($grammar_from_tokens, $grammar_from_file);
+    }
 
     //print_grammar_in_cmd($grammar);
 
@@ -43,7 +54,7 @@ try {
 
     generate_deterministic_finite_automaton($grammar);
 
-    //print_grammar_in_cmd($grammar);
+    print_grammar_in_cmd($grammar);
 
     $afd = convert_grammar_into_matrix($grammar);
 

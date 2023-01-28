@@ -111,10 +111,13 @@ class Rule
 
     public function remove_production_by_terminal_and_non_terminal($terminal, $non_terminal)
     {
-        for ($i = 0; $i < count($this->productions); $i++) {
-            if ($this->productions[$i]->get_terminal() == $terminal && $this->productions[$i]->get_non_terminal() == $non_terminal) {
-                unset($this->productions[$i]);
-                Sort($this->productions);
+        foreach ($this->productions as $production){
+            if ($production->get_terminal() == $terminal && $production->get_non_terminal() == $non_terminal) {
+                $index = array_search($production, $this->productions);
+
+                unset($this->productions[$index]);
+                sort($this->productions);
+                return;
             }
         }
     }
