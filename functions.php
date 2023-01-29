@@ -10,26 +10,26 @@ use Colors\Color;
 
 function yellow($str, $eol = false)
 {
-    $c = new Color();
-    echo(($str)->yellow . ($eol ? PHP_EOL : '') . "\n");
+    $c = new Color($str);
+    echo($c->yellow . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function magenta($str, $eol = false)
 {
-    $c = new Color();
-    echo(($str)->magenta . ($eol ? PHP_EOL : '') . "\n");
+    $c = new Color($str);
+    echo($c->magenta . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function green($str, $eol = false)
 {
-    $c = new Color();
-    echo(($str)->green . ($eol ? PHP_EOL : '') . "\n");
+    $c = new Color($str);
+    echo($c->green . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function white($str, $eol = false)
 {
-    $c = new Color();
-    echo(($str)->white . ($eol ? PHP_EOL : '') . "\n");
+    $c = new Color($str);
+    echo($c->white . ($eol ? PHP_EOL : '') . "\n");
 }
 
 function get_and_validate_grammar_file($path)
@@ -44,34 +44,31 @@ function get_and_validate_grammar_file($path)
     return array_filter(explode("\n", $file));
 }
 
-
-function get_tokens_from_grammar_file($metadata)
+function get_tokens_from_grammar_file($file_data)
 {
-    $array = [];
+    $tokens = [];
 
-    foreach ($metadata as $value) {
+    foreach ($file_data as $value) {
         if (!StringHelper::contains($value, "::=")) {
-            $array[] = $value;
+            $tokens[] = $value;
         }
     }
 
-    return $array;
+    return $tokens;
 }
 
-function get_grammar_from_grammar_file($metadata)
+function get_grammar_from_grammar_file($file_data)
 {
-    $array = [];
+    $ra_rules = [];
 
-    foreach ($metadata as $value) {
+    foreach ($file_data as $value) {
         if (StringHelper::contains($value, "::=")) {
-            $array[] = $value;
+            $ra_rules[] = $value;
         }
     }
 
-    return $array;
+    return $ra_rules;
 }
-
-// refact pls
 
 function read_tokens_from_file(&$grammar, $tokens)
 {
@@ -112,6 +109,8 @@ function read_tokens_from_file(&$grammar, $tokens)
 function read_grammar_from_file(&$grammar, $raw_rules)
 {
     $count_of_raw_rules = count($raw_rules);
+
+    //todo: validar com professor se é necessário a criação do estado "X"
     $should_create_finish_state = false;
 
     foreach ($raw_rules as $raw_rule) {
@@ -119,41 +118,33 @@ function read_grammar_from_file(&$grammar, $raw_rules)
 
         $name = StringHelper::regex("/<(.)>/i", $raw_rule[0]);
 
-        $is_final = StringHelper::contains($raw_rule[0], "*");
-
         $rule = ($name == "S") ? $grammar->get_rule_by_name("S") : new Rule($name);
 
+        //todo: validar com o professor se essa sintaxe se aplica ao BNF tbm ou se só consideramos o ε
+        $is_final = StringHelper::contains($raw_rule[0], "*");
         $rule->set_is_final($is_final);
 
         $raw_productions = explode("|", $raw_rule[1]);
 
         foreach ($raw_productions as $raw) {
             if (StringHelper::contains($raw, "ε")) {
+                //todo: validar com o professor se realmente só marcamos o estado como final, ou se criamos o estado "X" tbm
                 $rule->set_is_final(true);
             } else if (!StringHelper::contains($raw, ["<", ">"])) {
                 $production = new Production();
                 $terminal = trim($raw);
                 $production->set_terminal($terminal);
+                $production->set_non_terminal(StringHelper::convert_number_to_alphabet($count_of_raw_rules + 1));
                 $should_create_finish_state = true;
-                $non_terminal = StringHelper::convert_number_to_alphabet($count_of_raw_rules + 1);
-                $production->set_non_terminal($non_terminal);
             } else {
-                // retirar parte de pegar da esquerda o nao terminal
-                $terminal_before_non_terminal = StringHelper::regex("/(.)</i", $raw);
-                $terminal_after_non_terminal = StringHelper::regex("/>(.)/i", $raw);
+                $terminal = StringHelper::regex("/(.)</i", $raw);
                 $non_terminal = StringHelper::regex("/<(.*?)>/i", $raw);
 
                 $production = new Production();
                 $production->set_non_terminal($non_terminal);
-
-                if ($terminal_before_non_terminal != "" && $terminal_after_non_terminal == "") {
-                    $production->set_terminal($terminal_before_non_terminal);
-                }
-
-                if ($terminal_after_non_terminal != "" && $terminal_before_non_terminal == "") {
-                    $production->set_terminal($terminal_after_non_terminal);
-                }
+                $production->set_terminal($terminal);
             }
+
             $rule->add_production($production);
         }
 
@@ -161,6 +152,7 @@ function read_grammar_from_file(&$grammar, $raw_rules)
             $grammar->add_rule($rule);
     }
 
+    // todo: se for pra criar o estado "X" mesmo, devemos criar apenas um ou vários como fazemos no processamento dos tokens?
     if ($should_create_finish_state) {
         $rule = new Rule(StringHelper::convert_number_to_alphabet($count_of_raw_rules + 1), true);
         $grammar->add_rule($rule);
@@ -184,14 +176,14 @@ function print_grammar_in_cmd($grammar)
             print("+");
         }
         if (json_encode($rule->get_is_reachable()) == "false") {
-            print("+");
+            print("o");
         }
         print(" {$rule->get_name()} |");
-        foreach ($rule->get_non_terminals_by_terminals($terminals) as $value) {
-            print(" " . key($value) . " => { ");
-            foreach ($value as $teste) {
-                foreach ($teste as $teste1) {
-                    print($teste1);
+        foreach ($rule->get_non_terminals_by_terminals($terminals) as $non_terminals_by_terminal) {
+            print(" " . key($non_terminals_by_terminal) . " => { ");
+            foreach ($non_terminals_by_terminal as $rules) {
+                foreach ($rules as $rule) {
+                    print($rule);
                 }
             }
             print(" } ");
@@ -206,8 +198,9 @@ function convert_grammar_into_matrix($grammar)
     $rules = $grammar->get_rules();
 
     $matrix[0][0] = '$';
+    $matrix[0][1] = '$';
 
-    $i = 1;
+    $i = 2;
     foreach ($terminals as $terminal) {
         $matrix[0][$i] = $terminal;
         $i++;
@@ -215,40 +208,36 @@ function convert_grammar_into_matrix($grammar)
 
     $i = 1;
     foreach ($rules as $rule) {
-        $string = "";
+        $characteristics = [];
 
         if (json_encode($rule->get_is_reachable()) == "false") {
-            $string .= "o";
+            $characteristics[] = "o";
         }
 
         if ($rule->is_dead()) {
-            $string .= "+";
+            $characteristics[] = "+";
         }
 
         if ($rule->get_is_final()) {
-            $string .= "*";
+            $characteristics[] = "*";
         }
 
         if ($rule->get_is_initial()) {
-            $string .= "->";
+            $characteristics[] = "->";
         }
 
-        $string = "{$string} {$rule->get_name()}";
-
-        $matrix[$i][0] = $string;
+        $matrix[$i][0] = join(" ", $characteristics);
+        $matrix[$i][1] = $rule->get_name();
 
         $transitions = $rule->get_non_terminals_by_terminals($terminals);
 
-        $j = 1;
+        $j = 2;
         foreach ($transitions as $transition) {
 
             foreach ($transition as $next_rules) {
-                $string = "";
-                foreach ($next_rules as $next_rule) {
-                    $string = "{$string}{$next_rule}";
-                }
+                $rules = implode('', $next_rules);
             }
-            $matrix[$i][$j] = $string;
+            $matrix[$i][$j] = $rules;
             $j++;
         }
         $i++;
@@ -303,6 +292,12 @@ function print_matrix_into_file($matrix, $file_name, $title)
 
 function unify_grammars($grammar1, $grammar2)
 {
+    if (!isset($grammar1) and isset($grammar2)) {
+        return $grammar2;
+    } else if (isset($grammar1) and !isset($grammar2)) {
+        return $grammar1;
+    }
+
     $count_of_rules = count($grammar1->get_rules());
     $rules_names = [];
 
@@ -342,10 +337,14 @@ function unify_grammars($grammar1, $grammar2)
         }
     }
 
+    set_unreachable_rules($grammar1);
+
+    green("Successfully merged grammars from file");
+
     return $grammar1;
 }
 
-function generate_deterministic_finite_automaton($grammar)
+function transform_grammar_in_deterministic_finite_automaton($grammar)
 {
     $terminals = $grammar->get_all_terminals();
 
