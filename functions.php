@@ -226,6 +226,7 @@ function convert_grammar_into_matrix($grammar)
             $characteristics[] = "->";
         }
 
+        //todo: Validar com o professor se podemos exibir os estados inalcançáveis assim mesmo, com a coluna extra
         $matrix[$i][0] = join(" ", $characteristics);
         $matrix[$i][1] = $rule->get_name();
 
@@ -400,6 +401,36 @@ function transform_grammar_in_deterministic_finite_automaton($grammar)
         }
         $j++;
     }
+
+    //todo: Validar com professor se é assim mesmo o estado de erro
+    $error_rule_name = "ERR";
+    $error_rule = new Rule($error_rule_name, true);
+
+    foreach ($terminals as $terminal){
+        $production = new Production();
+        $production->set_terminal($terminal);
+        $production->set_non_terminal($error_rule_name);
+
+        $error_rule->add_production($production);
+    }
+
+    foreach ($grammar->get_rules() as $rule){
+        foreach ($rule->get_non_terminals_by_terminals($terminals) as $non_terminals_by_terminal){
+            $terminal = key($non_terminals_by_terminal);
+            $reachable_rules = array_values($non_terminals_by_terminal);
+
+            if (count($reachable_rules) == 1 and $reachable_rules[0][0] == "-"){
+                $production = new Production();
+                $production->set_non_terminal($error_rule_name);
+                $production->set_terminal($terminal);
+
+                $rule->add_production($production);
+            }
+        }
+    }
+
+    $grammar->add_rule($error_rule);
+
     set_unreachable_rules($grammar);
 }
 
