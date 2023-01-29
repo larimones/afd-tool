@@ -197,8 +197,8 @@ function convert_grammar_into_matrix($grammar)
     $terminals = $grammar->get_all_terminals();
     $rules = $grammar->get_rules();
 
-    $matrix[0][0] = '$';
-    $matrix[0][1] = '$';
+    $matrix[0][0] = '';
+    $matrix[0][1] = 'δ';
 
     $i = 2;
     foreach ($terminals as $terminal) {
@@ -211,11 +211,11 @@ function convert_grammar_into_matrix($grammar)
         $characteristics = [];
 
         if (json_encode($rule->get_is_reachable()) == "false") {
-            $characteristics[] = "o";
+            $characteristics[] = "∞";
         }
 
         if ($rule->is_dead()) {
-            $characteristics[] = "+";
+            $characteristics[] = "✝";
         }
 
         if ($rule->get_is_final()) {
@@ -223,7 +223,7 @@ function convert_grammar_into_matrix($grammar)
         }
 
         if ($rule->get_is_initial()) {
-            $characteristics[] = "->";
+            $characteristics[] = "→";
         }
 
         //todo: Validar com o professor se podemos exibir os estados inalcançáveis assim mesmo, com a coluna extra
@@ -255,11 +255,13 @@ function print_matrix_into_file($matrix, $file_name, $title)
     fwrite($fp, "<br />");
     fwrite($fp, "<h2 style='text-align: center; margin:auto;'>{$title}</h2>");
     fwrite($fp, "<br />");
-    fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >");
+    fwrite($fp, "<table style='text-align: center; margin:auto; border-collapse: collapse;' >");
     foreach ($matrix as $row) {
         fwrite($fp, "<tr>");
         foreach ($row as $col) {
-            fwrite($fp, "<td width='100px'>{$col}</td>");
+            $index = array_search($col, $row);
+            $style = ($index == 0) ? 'border-style:none;': "border: 1px solid black; border-collapse: collapse;";
+            fwrite($fp, "<td width='100px' style='{$style}'>{$col}</td>");
         }
         fwrite($fp, "</tr>");
     }
