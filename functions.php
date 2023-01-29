@@ -403,6 +403,31 @@ function transform_grammar_in_deterministic_finite_automaton($grammar)
         $j++;
     }
 
+    add_error_state_to_afd($grammar, $terminals);
+    set_unreachable_rules($grammar);
+}
+
+function set_unreachable_rules($grammar)
+{
+    $unreachable_rules = $grammar->get_unreachable_rules();
+
+    foreach ($grammar->get_rules() as $rule) {
+        if (in_array($rule->get_name(), $unreachable_rules)) {
+            $rule->set_is_reachable(false);
+        } else {
+            $rule->set_is_reachable(true);
+        }
+    }
+}
+
+function unset_unreachable_rules($grammar)
+{
+    foreach ($grammar->get_rules() as $rule) {
+        $rule->set_is_reachable(null);
+    }
+}
+
+function add_error_state_to_afd($grammar, $terminals){
     //todo: Validar com professor se é assim mesmo o estado de erro
     $error_rule_name = "ERR";
     $error_rule = new Rule($error_rule_name, true);
@@ -431,28 +456,6 @@ function transform_grammar_in_deterministic_finite_automaton($grammar)
     }
 
     $grammar->add_rule($error_rule);
-
-    set_unreachable_rules($grammar);
-}
-
-function set_unreachable_rules($grammar)
-{
-    $unreachable_rules = $grammar->get_unreachable_rules();
-
-    foreach ($grammar->get_rules() as $rule) {
-        if (in_array($rule->get_name(), $unreachable_rules)) {
-            $rule->set_is_reachable(false);
-        } else {
-            $rule->set_is_reachable(true);
-        }
-    }
-}
-
-function unset_unreachable_rules($grammar)
-{
-    foreach ($grammar->get_rules() as $rule) {
-        $rule->set_is_reachable(null);
-    }
 }
 
 
