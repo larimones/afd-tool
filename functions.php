@@ -408,7 +408,7 @@ function generate_deterministic_finite_automaton($grammar)
                             $array_of_productions = array_unique(str_split($string_of_productions));
 
                             foreach ($array_of_productions as $productions_name) {
-                                if ($new_rule->get_production_by_terminal_and_non_terminal($t, $productions_name) != null){
+                                if ($new_rule->get_production_by_terminal_and_non_terminal($t, $productions_name) != null) {
                                     continue;
                                 }
 
@@ -420,11 +420,8 @@ function generate_deterministic_finite_automaton($grammar)
                             }
                         }
                     }
+                    $grammar->add_rule($new_rule);
                 }
-
-                var_dump($new_rule->get_productions());
-
-                $grammar->add_rule($new_rule);
             }
 
             $new_production = new Production();
