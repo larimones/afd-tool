@@ -377,46 +377,63 @@ function generate_deterministic_finite_automaton($grammar)
                     continue;
                 }
 
+                if (count($non_terminals) == 1 and StringHelper::contains($non_terminals[0], "[")) {
+                    continue;
+                }
+
                 $new_rule_name = "[" . join($non_terminals) . "]";
 
                 $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
+
                 if ($verify_rule_existence == NULL) {
 
                     $new_rule = new Rule($new_rule_name);
 
-                    $i = 0;
-                    while (true) {
-                        if (!array_key_exists($i, $non_terminals)) {
-                            break;
-                        }
-
-                        $non_terminal = $non_terminals[$i];
+                    foreach ($non_terminals as $non_terminal) {
                         $reference_rule = $grammar->get_rule_by_name($non_terminal);
 
                         if ($reference_rule->get_is_final()) {
                             $new_rule->set_is_final(true);
                         }
 
-                        foreach ($reference_rule->get_productions() as $production) {
-                            if (StringHelper::contains($production->get_non_terminal(), "[")) {
-                                $non_terminals[] = $production->get_non_terminal();
-                            } else if ($new_rule->get_production_by_terminal_and_non_terminal($production->get_terminal(), $production->get_non_terminal()) == null) {
+                        foreach ($terminals as $t) {
+                            $string_of_productions = "";
+                            foreach ($reference_rule->get_productions_by_terminal($t) as $production) {
+                                $string_of_productions .= $production->get_non_terminal();
+                            }
+
+                            $string_of_productions = str_replace("[", "", $string_of_productions);
+                            $string_of_productions = str_replace("]", "", $string_of_productions);
+
+                            $array_of_productions = array_unique(str_split($string_of_productions));
+
+                            foreach ($array_of_productions as $productions_name) {
+                                if ($new_rule->get_production_by_terminal_and_non_terminal($t, $productions_name) != null){
+                                    continue;
+                                }
+
+                                $production = new Production();
+                                $production->set_non_terminal($productions_name);
+                                $production->set_terminal($t);
+
                                 $new_rule->add_production($production);
                             }
                         }
-                        $i++;
                     }
-
-                    $grammar->add_rule($new_rule);
                 }
-                $new_production = new Production();
-                $new_production->set_terminal($terminal);
-                $new_production->set_non_terminal($new_rule_name);
 
-                $rule->remove_all_productions_by_terminal($terminal);
+                var_dump($new_rule->get_productions());
 
-                $rule->add_production($new_production);
+                $grammar->add_rule($new_rule);
             }
+
+            $new_production = new Production();
+            $new_production->set_terminal($terminal);
+            $new_production->set_non_terminal($new_rule_name);
+
+            $rule->remove_all_productions_by_terminal($terminal);
+
+            $rule->add_production($new_production);
         }
         $j++;
     }
