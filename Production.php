@@ -42,12 +42,4 @@ class Production
     {
         $this->terminal = $terminal;
     }
-
-    public function get_production(): ?string
-    {
-        if ($this->non_terminal == null)
-            return "{$this->terminal}";
-        else
-            return "{$this->terminal}<{$this->non_terminal}>";
-    }
 }

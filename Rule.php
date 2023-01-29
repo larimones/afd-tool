@@ -3,11 +3,8 @@
 class Rule
 {
     private string $name;
-
     private array $productions;
-
     private bool $is_final;
-
     private bool $is_initial;
     private ?bool $is_reachable;
 
@@ -19,7 +16,6 @@ class Rule
         $this->is_initial = ($name == "S");
         $this->is_reachable = NULL;
     }
-
 
     /**
      * @return bool
@@ -77,30 +73,28 @@ class Rule
 
     public function get_non_terminals_by_terminals($terminals)
     {
-        //todo: fazer código certo
-
         $array = [];
 
         foreach ($terminals as $terminal) {
-            $array2 = [];
+            $non_terminals = [];
             $found = false;
 
             foreach ($this->productions as $production) {
                 if ($production->get_terminal() == $terminal) {
                     $found = true;
-                    $array2[] = $production->get_non_terminal();
+                    $non_terminals[] = $production->get_non_terminal();
                 }
             }
 
             if (!$found)
-                $array2[] = "-";
+                $non_terminals[] = "-";
 
-            $array2 = array_unique($array2);
+            $non_terminals = array_unique($non_terminals);
 
-            sort($array2);
+            sort($non_terminals);
 
             array_push($array, [
-                "{$terminal}" => $array2
+                "{$terminal}" => $non_terminals
             ]);
         }
 
