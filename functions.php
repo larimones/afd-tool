@@ -373,6 +373,10 @@ function generate_deterministic_finite_automaton($grammar)
                     continue;
                 }
 
+                if (count($non_terminals) == 1 and !StringHelper::contains($non_terminals[0], "[")) {
+                    continue;
+                }
+
                 $new_rule_name = "[" . join($non_terminals) . "]";
 
                 $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);

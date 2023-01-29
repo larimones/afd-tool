@@ -134,6 +134,19 @@ class Rule
         return null;
     }
 
+    public function get_productions_by_terminal($terminal)
+    {
+        $array = [];
+
+        foreach ($this->productions as $production){
+            if ($production->get_terminal() == $terminal) {
+                $array[] = $production;
+            }
+        }
+
+        return $array;
+    }
+
     /**
      * @return bool
      */
