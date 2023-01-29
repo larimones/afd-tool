@@ -264,27 +264,7 @@ function print_matrix_into_file($matrix, $file_name, $title)
     }
     fwrite($fp, "</table>");
     fwrite($fp, "<br />");
-    fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >
-    <tr>
-        <td colspan='2'>Legenda</td>
-    </tr>
-    <tr>
-        <td width='50px'>-&gt;</td>
-        <td width='200px'>Estado Inicial</td>
-    </tr>
-    <tr>
-        <td>*</td>
-        <td>Estado Final</td>
-    </tr>
-    <tr>
-        <td>o</td>
-        <td>Estado Inalcançável</td>
-    </tr>
-    <tr>
-        <td>+</td>
-        <td>Estado Morto</td>
-    </tr>
-</table>");
+    fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >    <tr>        <td colspan='2'>Legenda</td>    </tr>    <tr>        <td width='50px'>-&gt;</td>        <td width='200px'>Estado Inicial</td>    </tr>    <tr>        <td>*</td>        <td>Estado Final</td>    </tr>    <tr>        <td>o</td>        <td>Estado Inalcançável</td>    </tr>    <tr>        <td>+</td>        <td>Estado Morto</td>    </tr></table>");
     fwrite($fp, "</body></html>");
 
     fclose($fp);
@@ -364,22 +344,9 @@ function transform_grammar_in_deterministic_finite_automaton($grammar)
 
             $non_terminals = array_values($non_terminals_by_terminal)[0];
 
-            if (count($non_terminals) < 1) {
+            if (count($non_terminals) <= 1) {
                 continue;
             } else {
-
-                if (count($non_terminals) == 1 and $non_terminals[0] == "-") {
-                    continue;
-                }
-
-                if (count($non_terminals) == 1 and !StringHelper::contains($non_terminals[0], "[")) {
-                    continue;
-                }
-
-                if (count($non_terminals) == 1 and StringHelper::contains($non_terminals[0], "[")) {
-                    continue;
-                }
-
                 $new_rule_name = "[" . join($non_terminals) . "]";
 
                 $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
