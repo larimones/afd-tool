@@ -327,6 +327,7 @@ function unify_grammars($grammar1, $grammar2)
 
 function transform_grammar_in_deterministic_finite_automaton($grammar)
 {
+    unset_unreachable_rules($grammar);
     $terminals = $grammar->get_all_terminals();
 
     $j = 0;
@@ -406,7 +407,7 @@ function transform_grammar_in_deterministic_finite_automaton($grammar)
     $error_rule_name = "ERR";
     $error_rule = new Rule($error_rule_name, true);
 
-    foreach ($terminals as $terminal){
+    foreach ($terminals as $terminal) {
         $production = new Production();
         $production->set_terminal($terminal);
         $production->set_non_terminal($error_rule_name);
@@ -414,12 +415,12 @@ function transform_grammar_in_deterministic_finite_automaton($grammar)
         $error_rule->add_production($production);
     }
 
-    foreach ($grammar->get_rules() as $rule){
-        foreach ($rule->get_non_terminals_by_terminals($terminals) as $non_terminals_by_terminal){
+    foreach ($grammar->get_rules() as $rule) {
+        foreach ($rule->get_non_terminals_by_terminals($terminals) as $non_terminals_by_terminal) {
             $terminal = key($non_terminals_by_terminal);
             $reachable_rules = array_values($non_terminals_by_terminal);
 
-            if (count($reachable_rules) == 1 and $reachable_rules[0][0] == "-"){
+            if (count($reachable_rules) == 1 and $reachable_rules[0][0] == "-") {
                 $production = new Production();
                 $production->set_non_terminal($error_rule_name);
                 $production->set_terminal($terminal);
@@ -446,3 +447,12 @@ function set_unreachable_rules($grammar)
         }
     }
 }
+
+function unset_unreachable_rules($grammar)
+{
+    foreach ($grammar->get_rules() as $rule) {
+        $rule->set_is_reachable(null);
+    }
+}
+
+

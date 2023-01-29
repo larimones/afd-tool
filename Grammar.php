@@ -53,14 +53,9 @@ class Grammar
 
     public function get_all_non_terminals()
     {
-        $all_non_terminals = [];
         foreach ($this->rules as $rule) {
-            foreach ($rule->get_productions() as $production) {
-                $all_non_terminals[] = $production->get_non_terminal();
-            }
+            $all_non_terminals[] = $rule->get_name();
         }
-
-        $all_non_terminals = array_unique($all_non_terminals);
 
         sort($all_non_terminals);
 
@@ -77,26 +72,45 @@ class Grammar
         }
 
         $reachable_states = array_filter(array_unique($reachable_states));
+        sort($reachable_states);
 
         if (count($reachable_states) > 0) {
-            do {
-                foreach ($reachable_states as $rule_name) {
-                    $initial_count = count($reachable_states);
-                    $rule = $this->get_rule_by_name($rule_name);
-
-                    foreach ($rule->get_productions() as $production) {
-                        $reachable_states[] = $production->get_non_terminal();
-                    }
-
-                    $reachable_states = array_filter(array_unique($reachable_states));
+            $i = 0;
+            while (true) {
+                if (!isset($reachable_states[$i])) {
+                    break;
                 }
-            } while (count($reachable_states) > $initial_count);
+
+                if ($reachable_states[$i] == "D"){
+                    $teste = 0;
+                }
+
+                $rule_name = $reachable_states[$i];
+                $rule = $this->get_rule_by_name($rule_name);
+
+                $array = [];
+                foreach ($rule->get_productions() as $production) {
+                    $array[] = $production->get_non_terminal();
+                }
+
+                foreach (array_unique($array) as $rule) {
+                    if (!in_array($rule, $reachable_states))
+                        $reachable_states[] = $rule;
+                }
+                $i++;
+            }
         }
 
-        return array_diff($this->get_all_non_terminals(), $reachable_states);
+        $all_non_terminals = $this->get_all_non_terminals();
+
+        if (!in_array("S", $reachable_states))
+            $reachable_states[] = "S";
+
+        return array_diff($all_non_terminals, $reachable_states);
     }
 
-    public function get_dead_rules()
+    public
+    function get_dead_rules()
     {
         $dead_states = [];
 

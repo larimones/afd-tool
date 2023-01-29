@@ -152,6 +152,7 @@ class Rule
         }
 
         $reachable_states = array_unique($reachable_states);
+        // todo: Validar com o professor se M continua sendo morto depois de adicionar o estado de erro
 
         return (count($reachable_states) == 1 && in_array($this->name, $reachable_states)) ? true : false;
     }
@@ -160,7 +161,7 @@ class Rule
         return $this->is_reachable;
     }
 
-    public function set_is_reachable($is_reachable) : void {
+    public function set_is_reachable(?bool $is_reachable) : void {
         $this->is_reachable = $is_reachable;
     }
 
