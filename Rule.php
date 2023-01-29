@@ -17,42 +17,26 @@ class Rule
         $this->is_reachable = NULL;
     }
 
-    /**
-     * @return bool
-     */
     public function get_is_final(): bool
     {
         return $this->is_final;
     }
 
-    /**
-     * @return bool
-     */
     public function get_is_initial(): bool
     {
         return $this->is_initial;
     }
 
-    /**
-     * @return void
-     */
     public function set_is_final(bool $is_final): void
     {
         $this->is_final = $is_final;
     }
 
-    /**
-     * @return string
-     */
     public function get_name(): string
     {
         return $this->name;
     }
 
-
-    /**
-     * @return void
-     */
     public function set_name(string $name): void
     {
         $this->name = $name;
@@ -63,9 +47,6 @@ class Rule
         $this->productions[] = $production;
     }
 
-    /**
-     * @return array
-     */
     public function get_productions(): array
     {
         return $this->productions;
@@ -141,9 +122,6 @@ class Rule
         return $array;
     }
 
-    /**
-     * @return bool
-     */
     public function is_dead(): bool
     {
         $reachable_states = [];

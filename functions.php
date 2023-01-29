@@ -251,7 +251,7 @@ function print_matrix_into_file($matrix, $file_name, $title)
 {
     $fp = fopen("{$file_name}.html", 'w');
     fwrite($fp, "<html><head><meta charset='UTF-8'></head><body>");
-    fwrite($fp, "<table style='text-align: center; margin:auto;'><tr><td>Universidade Federal Da Fronteira Sul</td></tr><tr><td>Componente Curricular: Linguagens formais e autômatos</td></tr><tr><td>Professor(a):	Braulio Adriano de Mello</td></tr><tr><td>Acadêmicos(as): Larissa Mones e Matheus Vieira</td></tr><tr><td>Curso: Ciência Da Computação</td></tr></table>");
+    fwrite($fp, "<table style='text-align: center; margin:auto;'><tr><td>Universidade Federal Da Fronteira Sul</td></tr><tr><td>Componente Curricular: Linguagens formais e autômatos</td></tr><tr><td>Professor(a):	Braulio Adriano de Mello</td></tr><tr><td>Acadêmicos(as): Larissa Mones Bedin e Matheus Vieira Santos</td></tr><tr><td>Curso: Ciência Da Computação</td></tr></table>");
     fwrite($fp, "<br />");
     fwrite($fp, "<h2 style='text-align: center; margin:auto;'>{$title}</h2>");
     fwrite($fp, "<br />");
