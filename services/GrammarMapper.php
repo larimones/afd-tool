@@ -60,7 +60,7 @@ class GrammarMapper
     {
         $count_of_raw_rules = count($raw_rules);
 
-        //todo: validar com professor se é necessário a criação do estado "X"
+        // todo: validar com professor se é necessário a criação do estado "X"
         $should_create_finish_state = false;
 
         foreach ($raw_rules as $raw_rule) {
@@ -70,7 +70,7 @@ class GrammarMapper
 
             $rule = ($name == "S") ? $grammar->get_rule_by_name("S") : new Rule($name);
 
-            //todo: validar com o professor se essa sintaxe se aplica ao BNF tbm ou se só consideramos o ε
+            // todo: validar com o professor se essa sintaxe se aplica ao BNF tbm ou se só consideramos o ε
             $is_final = StringHelper::contains($raw_rule[0], "*");
             $rule->set_is_final($is_final);
 
@@ -78,7 +78,7 @@ class GrammarMapper
 
             foreach ($raw_productions as $raw) {
                 if (StringHelper::contains($raw, "ε")) {
-                    //todo: validar com o professor se realmente só marcamos o estado como final, ou se criamos o estado "X" tbm
+                    // todo: validar com o professor se realmente só marcamos o estado como final, ou se criamos o estado "X" tbm
                     $rule->set_is_final(true);
                 } else if (!StringHelper::contains($raw, ["<", ">"])) {
                     $production = new Production();
@@ -207,7 +207,7 @@ class GrammarMapper
                 $characteristics[] = "→";
             }
 
-            //todo: Validar com o professor se podemos exibir os estados inalcançáveis assim mesmo, com a coluna extra
+            // todo: Validar com o professor se podemos exibir os estados inalcançáveis assim mesmo, com a coluna extra
             $matrix[$i][0] = join(" ", $characteristics);
             $matrix[$i][1] = $rule->get_name();
 

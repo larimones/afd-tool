@@ -129,7 +129,7 @@ class FiniteAutomatonService
      */
     private static function add_error_state_to_afd(Grammar $grammar, array $terminals): void
     {
-        //todo: Validar com professor se é assim mesmo o estado de erro
+        // todo: Validar com professor se é assim mesmo o estado de erro
         $error_rule_name = "ERR";
         $error_rule = new Rule($error_rule_name, true);
 
