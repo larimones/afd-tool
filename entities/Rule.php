@@ -1,5 +1,7 @@
 <?php
 
+namespace Entities;
+
 class Rule
 {
     private string $name;

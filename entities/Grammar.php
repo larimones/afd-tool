@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Rule.php';
+namespace Entities;
 
 class Grammar
 {
@@ -109,8 +109,7 @@ class Grammar
         return array_diff($all_non_terminals, $reachable_states);
     }
 
-    public
-    function get_dead_rules()
+    public function get_dead_rules()
     {
         $dead_states = [];
 
@@ -123,3 +122,5 @@ class Grammar
         return $dead_states;
     }
 }
+
+?>

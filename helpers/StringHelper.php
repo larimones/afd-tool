@@ -1,5 +1,7 @@
 <?php
 
+namespace Helpers;
+
 class StringHelper
 {
     /**

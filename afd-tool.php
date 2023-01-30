@@ -1,12 +1,12 @@
 <?php
 
-require_once 'StringHelper.php';
-require_once 'Grammar.php';
-require_once 'Production.php';
-require_once 'Rule.php';
+require_once 'helpers/StringHelper.php';
+require_once 'entities/Production.php';
+require_once 'entities/Rule.php';
 require_once 'functions.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
+use Entities\Grammar;
 use Garden\Cli\Cli;
 
 try {
@@ -48,7 +48,7 @@ try {
     //print_grammar_in_cmd($grammar);
 
     $afnd = convert_grammar_into_matrix($grammar);
-    $afnd_file_name = "non_deterministic_finite_automaton";
+    $afnd_file_name = "output_files/non_deterministic_finite_automaton";
     print_matrix_into_file($afnd, $afnd_file_name, "Autômato Finito Não Determinístico");
     green("Successfully printed AFND into file {$afnd_file_name}.html");
 
@@ -59,7 +59,7 @@ try {
     //print_grammar_in_cmd($grammar);
 
     $afd = convert_grammar_into_matrix($grammar);
-    $afd_file_name = "deterministic_finite_automaton";
+    $afd_file_name = "output_files/deterministic_finite_automaton";
     print_matrix_into_file($afd, $afd_file_name, "Autômato Finito Determinístico");
     green("Successfully printed AFD into file {$afd_file_name}.html");
 

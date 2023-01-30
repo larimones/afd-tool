@@ -1,5 +1,7 @@
 <?php
 
+namespace Entities;
+
 class Production
 {
     private ?string $terminal;

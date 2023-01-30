@@ -1,12 +1,11 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once 'Grammar.php';
-require_once 'Production.php';
-require_once 'Rule.php';
-require_once 'StringHelper.php';
 
 use Colors\Color;
+use Entities\Production;
+use Entities\Rule;
+use Helpers\StringHelper;
 
 function yellow($str, $eol = false)
 {
