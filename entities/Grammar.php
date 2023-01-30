@@ -4,6 +4,9 @@ namespace Entities;
 
 class Grammar
 {
+    /**
+     * @var array
+     */
     private array $rules;
 
     public function __construct()
@@ -15,17 +18,28 @@ class Grammar
         $this->add_rule($initial_rule);
     }
 
+    /**
+     * @param Rule $rule
+     * @return void
+     */
     public function add_rule(Rule $rule)
     {
         $this->rules[] = $rule;
     }
 
+    /**
+     * @return array
+     */
     public function get_rules(): array
     {
         return $this->rules;
     }
 
-    public function get_rule_by_name(?string $name): ?Rule
+    /**
+     * @param string $name
+     * @return Rule|null
+     */
+    public function get_rule_by_name(string $name): ?Rule
     {
         foreach ($this->rules as $rule) {
             if ($rule->get_name() == $name) {
@@ -35,7 +49,10 @@ class Grammar
         return NULL;
     }
 
-    public function get_all_terminals()
+    /**
+     * @return array
+     */
+    public function get_all_terminals(): array
     {
         $all_terminals = [];
         foreach ($this->rules as $rule) {
@@ -51,7 +68,10 @@ class Grammar
         return $all_terminals;
     }
 
-    public function get_all_non_terminals()
+    /**
+     * @return array
+     */
+    public function get_all_non_terminals(): array
     {
         foreach ($this->rules as $rule) {
             $all_non_terminals[] = $rule->get_name();
@@ -62,7 +82,10 @@ class Grammar
         return $all_non_terminals;
     }
 
-    public function get_unreachable_rules()
+    /**
+     * @return array
+     */
+    public function get_unreachable_rules(): array
     {
         $initial_rule = $this->get_rule_by_name("S");
         $reachable_states = [];
@@ -79,10 +102,6 @@ class Grammar
             while (true) {
                 if (!isset($reachable_states[$i])) {
                     break;
-                }
-
-                if ($reachable_states[$i] == "D"){
-                    $teste = 0;
                 }
 
                 $rule_name = $reachable_states[$i];
@@ -109,7 +128,10 @@ class Grammar
         return array_diff($all_non_terminals, $reachable_states);
     }
 
-    public function get_dead_rules()
+    /**
+     * @return array
+     */
+    public function get_dead_rules(): array
     {
         $dead_states = [];
 
@@ -122,5 +144,3 @@ class Grammar
         return $dead_states;
     }
 }
-
-?>

@@ -4,13 +4,35 @@ namespace Entities;
 
 class Rule
 {
+    /**
+     * @var string
+     */
     private string $name;
+
+    /**
+     * @var array
+     */
     private array $productions;
+    /**
+     * @var bool|mixed
+     */
     private bool $is_final;
+
+    /**
+     * @var bool
+     */
     private bool $is_initial;
+
+    /**
+     * @var bool|null
+     */
     private ?bool $is_reachable;
 
-    public function __construct($name, $is_final = false)
+    /**
+     * @param string $name
+     * @param bool $is_final
+     */
+    public function __construct(string $name, bool $is_final = false)
     {
         $this->name = $name;
         $this->is_final = $is_final;
@@ -19,42 +41,70 @@ class Rule
         $this->is_reachable = NULL;
     }
 
+    /**
+     * @return bool
+     */
     public function get_is_final(): bool
     {
         return $this->is_final;
     }
 
+    /**
+     * @return bool
+     */
     public function get_is_initial(): bool
     {
         return $this->is_initial;
     }
 
+    /**
+     * @param bool $is_final
+     * @return void
+     */
     public function set_is_final(bool $is_final): void
     {
         $this->is_final = $is_final;
     }
 
+    /**
+     * @return string
+     */
     public function get_name(): string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return void
+     */
     public function set_name(string $name): void
     {
         $this->name = $name;
     }
 
-    public function add_production(Production $production)
+    /**
+     * @param Production $production
+     * @return void
+     */
+    public function add_production(Production $production): void
     {
         $this->productions[] = $production;
     }
 
+    /**
+     * @return array
+     */
     public function get_productions(): array
     {
         return $this->productions;
     }
 
-    public function get_non_terminals_by_terminals($terminals)
+    /**
+     * @param array $terminals
+     * @return array
+     */
+    public function get_non_terminals_by_terminals(array $terminals): array
     {
         $array = [];
 
@@ -76,9 +126,9 @@ class Rule
 
             sort($non_terminals);
 
-            array_push($array, [
+            $array[] = [
                 "{$terminal}" => $non_terminals
-            ]);
+            ];
         }
 
         arsort($array);
@@ -86,7 +136,12 @@ class Rule
         return $array;
     }
 
-    public function remove_production_by_terminal_and_non_terminal($terminal, $non_terminal)
+    /**
+     * @param string|null $terminal
+     * @param string|null $non_terminal
+     * @return void
+     */
+    public function remove_production_by_terminal_and_non_terminal(?string $terminal, ?string $non_terminal): void
     {
         foreach ($this->productions as $production){
             if ($production->get_terminal() == $terminal && $production->get_non_terminal() == $non_terminal) {
@@ -99,7 +154,12 @@ class Rule
         }
     }
 
-    public function get_production_by_terminal_and_non_terminal($terminal, $non_terminal)
+    /**
+     * @param string|null $terminal
+     * @param string|null $non_terminal
+     * @return mixed|null
+     */
+    public function get_production_by_terminal_and_non_terminal(?string $terminal, ?string $non_terminal): mixed
     {
         foreach ($this->productions as $production){
             if ($production->get_terminal() == $terminal && $production->get_non_terminal() == $non_terminal) {
@@ -111,7 +171,11 @@ class Rule
         return null;
     }
 
-    public function get_productions_by_terminal($terminal)
+    /**
+     * @param string|null $terminal
+     * @return array
+     */
+    public function get_productions_by_terminal(?string $terminal): array
     {
         $array = [];
 
@@ -124,6 +188,9 @@ class Rule
         return $array;
     }
 
+    /**
+     * @return bool
+     */
     public function is_dead(): bool
     {
         $reachable_states = [];
@@ -134,18 +201,29 @@ class Rule
         $reachable_states = array_unique($reachable_states);
         // todo: Validar com o professor se M continua sendo morto depois de adicionar o estado de erro
 
-        return (count($reachable_states) == 1 && in_array($this->name, $reachable_states)) ? true : false;
+        return count($reachable_states) == 1 && in_array($this->name, $reachable_states);
     }
 
+    /**
+     * @return bool|null
+     */
     public function get_is_reachable() : ?bool {
         return $this->is_reachable;
     }
 
+    /**
+     * @param bool|null $is_reachable
+     * @return void
+     */
     public function set_is_reachable(?bool $is_reachable) : void {
         $this->is_reachable = $is_reachable;
     }
 
-    public function remove_all_productions_by_terminal($terminal) : void {
+    /**
+     * @param string|null $terminal
+     * @return void
+     */
+    public function remove_all_productions_by_terminal(?string $terminal) : void {
         foreach ($this->productions as $production){
             if ($production->get_terminal() == $terminal){
                 $index = array_search($production, $this->productions);

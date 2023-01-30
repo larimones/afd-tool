@@ -4,12 +4,14 @@
     "vanilla/garden-cli": "~2.0",
     "kevinlebrun/colors.php": "1.0.*",
     "ext-json": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ext-mbstring": "*"
   },
   "autoload": {
     "psr-4": {
       "Entities\\": "entities/",
-      "Helpers\\": "helpers/"
+      "Helpers\\": "helpers/",
+      "Services\\": "services/"
     }
   }
 }

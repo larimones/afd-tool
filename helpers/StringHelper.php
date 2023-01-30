@@ -2,17 +2,19 @@
 
 namespace Helpers;
 
+use Exception;
+
 class StringHelper
 {
     /**
      * Returns a string based on the expression given
-     * @param $string
-     * @param $string
-     * @param $int
+     * @param string $expression
+     * @param string $string
+     * @param int $position
      * @return null|string
      */
 
-    public static function regex($expression, $string, $position = 1)
+    public static function regex(string $expression, string $string, int $position = 1): ?string
     {
         preg_match($expression, $string, $result);
 
@@ -21,12 +23,12 @@ class StringHelper
 
     /**
      * Returns if a string is present into another
-     * @param $string
-     * @param $string
+     * @param mixed $haystack
+     * @param mixed $needles
      * @return bool
      */
 
-    public static function contains($haystack, $needles)
+    public static function contains(mixed $haystack, mixed $needles): bool
     {
         foreach ((array)$needles as $needle) {
             if ($needle !== '' && mb_stripos($haystack, $needle) !== false) {
@@ -37,6 +39,11 @@ class StringHelper
         return false;
     }
 
+    /**
+     * @param int $number
+     * @return string
+     * @throws Exception
+     */
     public static function convert_number_to_alphabet(int $number): string
     {
         if ($number < 0) {

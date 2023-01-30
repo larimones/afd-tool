@@ -1,5 +1,4 @@
 /vendor/
 .idea/
 composer.lock
-deterministic_finite_automaton.html
-non_deterministic_finite_automaton.html
+/output_files/
