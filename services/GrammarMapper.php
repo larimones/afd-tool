@@ -70,10 +70,6 @@ class GrammarMapper
 
             $rule = ($name == "S") ? $grammar->get_rule_by_name("S") : new Rule($name);
 
-            // todo: validar com o professor se essa sintaxe se aplica ao BNF tbm ou se só consideramos o ε
-            $is_final = StringHelper::contains($raw_rule[0], "*");
-            $rule->set_is_final($is_final);
-
             $raw_productions = explode("|", $raw_rule[1]);
 
             foreach ($raw_productions as $raw) {
