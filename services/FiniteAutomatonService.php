@@ -133,7 +133,7 @@ class FiniteAutomatonService
         $error_rule = new Rule($error_rule_name, true);
 
         /*
-         * REMOVED BECAUSE THE ERR STATE SHOULD NOT BE VIEWD AS AN STATE FOR THE REST OF THE GRAMMAR
+         * REMOVED BECAUSE THE ERR STATE SHOULD NOT BE VIEWED AS AN STATE FOR THE REST OF THE GRAMMAR
         foreach ($terminals as $terminal) {
             $production = new Production();
             $production->set_terminal($terminal);
