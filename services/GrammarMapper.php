@@ -58,11 +58,6 @@ class GrammarMapper
      */
     public static function from_bfn_regular_grammar(Grammar &$grammar, array $raw_rules): void
     {
-        $count_of_raw_rules = count($raw_rules);
-
-        // todo: validar com professor se é necessário a criação do estado "X"
-        $should_create_finish_state = false;
-
         foreach ($raw_rules as $raw_rule) {
             $raw_rule = explode("::=", $raw_rule);
 
@@ -74,14 +69,11 @@ class GrammarMapper
 
             foreach ($raw_productions as $raw) {
                 if (StringHelper::contains($raw, "ε")) {
-                    // todo: validar com o professor se realmente só marcamos o estado como final, ou se criamos o estado "X" tbm
                     $rule->set_is_final(true);
                 } else if (!StringHelper::contains($raw, ["<", ">"])) {
                     $production = new Production();
                     $terminal = trim($raw);
                     $production->set_terminal($terminal);
-                    $production->set_non_terminal(StringHelper::convert_number_to_alphabet($count_of_raw_rules + 1));
-                    $should_create_finish_state = true;
                 } else {
                     $terminal = StringHelper::regex("/(.)</i", $raw);
                     $non_terminal = StringHelper::regex("/<(.*?)>/i", $raw);
@@ -96,12 +88,6 @@ class GrammarMapper
 
             if ($rule->get_name() != "S")
                 $grammar->add_rule($rule);
-        }
-
-        // todo: se for pra criar o estado "X" mesmo, devemos criar apenas um ou vários como fazemos no processamento dos tokens?
-        if ($should_create_finish_state) {
-            $rule = new Rule(StringHelper::convert_number_to_alphabet($count_of_raw_rules + 1), true);
-            $grammar->add_rule($rule);
         }
     }
 
@@ -157,6 +143,7 @@ class GrammarMapper
                 }
             }
 
+            //FiniteAutomatonService::add_error_state_to_afd($grammar1, $grammar1->get_all_terminals());
             FiniteAutomatonService::set_unreachable_rules($grammar1);
 
             CommandLineHelper::print_green_message("Successfully merged grammars from file");
@@ -203,7 +190,6 @@ class GrammarMapper
                 $characteristics[] = "→";
             }
 
-            // todo: Validar com o professor se podemos exibir os estados inalcançáveis assim mesmo, com a coluna extra
             $matrix[$i][0] = join(" ", $characteristics);
             $matrix[$i][1] = $rule->get_name();
 

@@ -127,12 +127,13 @@ class FiniteAutomatonService
      * @param array $terminals
      * @return void
      */
-    private static function add_error_state_to_afd(Grammar $grammar, array $terminals): void
+    public static function add_error_state_to_afd(Grammar $grammar, array $terminals): void
     {
-        // todo: Validar com professor se é assim mesmo o estado de erro
-        $error_rule_name = "ERR";
+        $error_rule_name = "-";
         $error_rule = new Rule($error_rule_name, true);
 
+        /*
+         * REMOVED BECAUSE THE ERR STATE SHOULD NOT BE VIEWD AS AN STATE FOR THE REST OF THE GRAMMAR
         foreach ($terminals as $terminal) {
             $production = new Production();
             $production->set_terminal($terminal);
@@ -155,7 +156,9 @@ class FiniteAutomatonService
                 }
             }
         }
+        */
 
         $grammar->add_rule($error_rule);
     }
+
 }

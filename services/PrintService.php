@@ -67,7 +67,7 @@ class PrintService
         }
         fwrite($fp, "</table>");
         fwrite($fp, "<br />");
-        fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >    <tr>        <td colspan='2'>Legenda</td>    </tr>    <tr>        <td width='50px'>→</td>        <td width='200px'>Estado Inicial</td>    </tr>    <tr>        <td>*</td>        <td>Estado Final</td>    </tr>    <tr>        <td>∞</td>        <td>Estado Inalcançável</td>    </tr>    <tr>        <td>✝</td>        <td>Estado Morto</td>    </tr></table>");
+        fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >    <tr>        <td colspan='2'>Legenda</td>    </tr>    <tr>        <td width='50px'>→</td>        <td width='200px'>Estado Inicial</td>    </tr>    <tr>        <td>*</td>        <td>Estado Final</td>    </tr>    <tr>        <td>∞</td>        <td>Estado Inalcançável</td>    </tr>    <tr>        <td>✝</td>        <td>Estado Morto</td>    </tr><tr>        <td>-</td>        <td>Estado de Erro</td>    </tr></table>");
         fwrite($fp, "</body></html>");
 
         fclose($fp);

@@ -193,13 +193,16 @@ class Rule
      */
     public function is_dead(): bool
     {
+        if ($this->is_final){
+            return false;
+        }
+
         $reachable_states = [];
         foreach ($this->productions as $production) {
             $reachable_states[] = $production->get_non_terminal();
         }
 
         $reachable_states = array_unique($reachable_states);
-        // todo: Validar com o professor se M continua sendo morto depois de adicionar o estado de erro
 
         return count($reachable_states) == 1 && in_array($this->name, $reachable_states);
     }
