@@ -47,7 +47,7 @@ try {
 
     //print_grammar_in_cmd($grammar);
 
-    $afnd = GrammarMapper::from_grammar_to_matrix($grammar);
+    $afnd = PrintService::from_grammar_to_matrix($grammar);
     $afnd_file_name = "output_files/non_deterministic_finite_automaton";
     PrintService::matrix_to_file($afnd, $afnd_file_name, "Autômato Finito Não Determinístico");
     CommandLineHelper::print_green_message("Successfully printed AFND into file {$afnd_file_name}.html");
@@ -58,7 +58,7 @@ try {
 
     //print_grammar_in_cmd($grammar);
 
-    $afd = GrammarMapper::from_grammar_to_matrix($grammar);
+    $afd = PrintService::from_grammar_to_matrix($grammar);
     $afd_file_name = "output_files/deterministic_finite_automaton";
     PrintService::matrix_to_file($afd, $afd_file_name, "Autômato Finito Determinístico");
     CommandLineHelper::print_green_message("Successfully printed AFD into file {$afd_file_name}.html");

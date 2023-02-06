@@ -72,4 +72,62 @@ class PrintService
 
         fclose($fp);
     }
+
+    /**
+     * @param Grammar $grammar
+     * @return array
+     */
+    public static function from_grammar_to_matrix(Grammar $grammar): array
+    {
+        $terminals = $grammar->get_all_terminals();
+        $rules = $grammar->get_rules();
+
+        $matrix[0][0] = '';
+        $matrix[0][1] = 'δ';
+
+        $i = 2;
+        foreach ($terminals as $terminal) {
+            $matrix[0][$i] = $terminal;
+            $i++;
+        }
+
+        $i = 1;
+        foreach ($rules as $rule) {
+            $characteristics = [];
+
+            if (json_encode($rule->get_is_reachable()) == "false") {
+                $characteristics[] = "∞";
+            }
+
+            if ($rule->is_dead()) {
+                $characteristics[] = "✝";
+            }
+
+            if ($rule->get_is_final()) {
+                $characteristics[] = "*";
+            }
+
+            if ($rule->get_is_initial()) {
+                $characteristics[] = "→";
+            }
+
+            $matrix[$i][0] = join(" ", $characteristics);
+            $matrix[$i][1] = $rule->get_name();
+
+            $transitions = $rule->get_non_terminals_by_terminals($terminals);
+
+            $j = 2;
+            foreach ($transitions as $transition) {
+
+                foreach ($transition as $next_rules) {
+                    $rules = implode('', $next_rules);
+                }
+                $matrix[$i][$j] = $rules;
+                $j++;
+            }
+            $i++;
+        }
+
+        return $matrix;
+    }
 }
