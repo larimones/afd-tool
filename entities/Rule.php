@@ -39,7 +39,7 @@ class Rule
         $this->name = $name;
         $this->is_final = $is_final;
         $this->productions = [];
-        $this->is_initial = ($name == "S");
+        $this->is_initial = ($name == Configuration::get_init_rule_name());
         $this->is_reachable = NULL;
     }
 

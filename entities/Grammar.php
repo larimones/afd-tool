@@ -2,6 +2,8 @@
 
 namespace Entities;
 
+use Configuration\Configuration;
+
 class Grammar
 {
     /**
@@ -13,7 +15,7 @@ class Grammar
     {
         $this->rules = [];
 
-        $initial_rule = new Rule("S");
+        $initial_rule = new Rule(Configuration::get_init_rule_name());
 
         $this->add_rule($initial_rule);
     }
@@ -87,7 +89,7 @@ class Grammar
      */
     public function get_unreachable_rules(): array
     {
-        $initial_rule = $this->get_rule_by_name("S");
+        $initial_rule = $this->get_rule_by_name(Configuration::get_init_rule_name());
         $reachable_states = [];
 
         foreach ($initial_rule->get_productions() as $production) {
@@ -122,8 +124,8 @@ class Grammar
 
         $all_non_terminals = $this->get_all_non_terminals();
 
-        if (!in_array("S", $reachable_states))
-            $reachable_states[] = "S";
+        if (!in_array(Configuration::get_init_rule_name(), $reachable_states))
+            $reachable_states[] = Configuration::get_init_rule_name();
 
         return array_diff($all_non_terminals, $reachable_states);
     }

@@ -2,6 +2,7 @@
 
 namespace Services;
 
+use Configuration\Configuration;
 use Entities\Grammar;
 use Entities\Production;
 use Entities\Rule;
@@ -32,7 +33,7 @@ class GrammarMapper
 
             for ($i = 0; $i < count($token_as_array); $i++) {
                 if ($i == 0) {
-                    $rule = $grammar->get_rule_by_name("S");
+                    $rule = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
 
                     $production = new Production();
                     $production->set_terminal($token_as_array[$i]);
@@ -70,7 +71,7 @@ class GrammarMapper
 
             $name = StringHelper::regex("/<(.)>/i", $raw_rule[0]);
 
-            $rule = ($name == "S") ? $grammar->get_rule_by_name("S") : new Rule($name);
+            $rule = ($name == Configuration::get_init_rule_name()) ? $grammar->get_rule_by_name(Configuration::get_init_rule_name()) : new Rule($name);
 
             $raw_productions = explode("|", $raw_rule[1]);
 
@@ -93,7 +94,7 @@ class GrammarMapper
                 $rule->add_production($production);
             }
 
-            if ($rule->get_name() != "S")
+            if ($rule->get_name() != Configuration::get_init_rule_name())
                 $grammar->add_rule($rule);
         }
     }
@@ -115,7 +116,7 @@ class GrammarMapper
             $rules_names = [];
 
             foreach ($grammar2->get_rules() as $rule) {
-                if ($rule->get_name() == "S") {
+                if ($rule->get_name() == Configuration::get_init_rule_name()) {
                     continue;
                 }
 
@@ -139,8 +140,8 @@ class GrammarMapper
             }
 
             foreach ($grammar2->get_rules() as $rule) {
-                if ($rule->get_name() == "S") {
-                    $ruleSGrammar1 = $grammar1->get_rule_by_name("S");
+                if ($rule->get_name() == Configuration::get_init_rule_name()) {
+                    $ruleSGrammar1 = $grammar1->get_rule_by_name(Configuration::get_init_rule_name());
 
                     foreach ($rule->get_productions() as $production) {
                         $ruleSGrammar1->add_production($production);

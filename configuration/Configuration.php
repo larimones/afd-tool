@@ -60,4 +60,12 @@ class Configuration
         return $_ENV["init_rule_symbol"];
     }
 
+    /**
+     * @return string
+     */
+    public static function get_init_rule_name(): string
+    {
+        return $_ENV["init_rule_name"];
+    }
+
 }
