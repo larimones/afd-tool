@@ -9,7 +9,7 @@ use Entities\Rule;
 class FiniteAutomatonService
 {
     /**
-     * @param $grammar
+     * @param Grammar $grammar
      * @return void
      */
     public static function transform_grammar_in_deterministic_finite_automaton(Grammar $grammar): void

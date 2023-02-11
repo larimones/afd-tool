@@ -22,7 +22,7 @@ class Grammar
      * @param Rule $rule
      * @return void
      */
-    public function add_rule(Rule $rule)
+    public function add_rule(Rule $rule) : void
     {
         $this->rules[] = $rule;
     }
