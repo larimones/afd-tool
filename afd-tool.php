@@ -42,7 +42,7 @@ try {
     $grammar_from_file_as_array = $input_file_service->get_grammar_from_grammar_file($metadata);
     if (count($grammar_from_file_as_array) > 0) {
         $grammar_from_file = new Grammar();
-        $grammar_mapper->from_bfn_regular_grammar($grammar_from_file, $grammar_from_file_as_array);
+        $grammar_mapper->from_bnf_regular_grammar($grammar_from_file, $grammar_from_file_as_array);
         CommandLineHelper::print_green_message("Successfully processed BNF grammar from file");
     }
 

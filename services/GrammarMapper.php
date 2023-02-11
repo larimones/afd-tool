@@ -63,7 +63,7 @@ class GrammarMapper
      * @param array $raw_rules
      * @return void
      */
-    public function from_bfn_regular_grammar(Grammar &$grammar, array $raw_rules): void
+    public function from_bnf_regular_grammar(Grammar &$grammar, array $raw_rules): void
     {
         foreach ($raw_rules as $raw_rule) {
             $raw_rule = explode("::=", $raw_rule);
