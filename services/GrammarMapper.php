@@ -10,12 +10,19 @@ use Helpers\StringHelper;
 
 class GrammarMapper
 {
+    public FiniteAutomatonService $finite_automaton_service;
+
+    public function __construct(FiniteAutomatonService $finite_automaton_service)
+    {
+        $this->finite_automaton_service = $finite_automaton_service;
+    }
+
     /**
      * @param Grammar $grammar
      * @param array $tokens
      * @return void
      */
-    public static function from_tokens(Grammar &$grammar, array $tokens): void
+    public function from_tokens(Grammar &$grammar, array $tokens): void
     {
         $count_of_rules = count($grammar->get_rules());
 
@@ -56,7 +63,7 @@ class GrammarMapper
      * @param array $raw_rules
      * @return void
      */
-    public static function from_bfn_regular_grammar(Grammar &$grammar, array $raw_rules): void
+    public function from_bfn_regular_grammar(Grammar &$grammar, array $raw_rules): void
     {
         foreach ($raw_rules as $raw_rule) {
             $raw_rule = explode("::=", $raw_rule);
@@ -96,7 +103,7 @@ class GrammarMapper
      * @param Grammar $grammar2
      * @return mixed
      */
-    public static function unify_grammars(Grammar $grammar1, Grammar $grammar2): Grammar
+    public function unify_grammars(Grammar $grammar1, Grammar $grammar2): Grammar
     {
         if (!isset($grammar1) and isset($grammar2)) {
             return $grammar2;
@@ -144,7 +151,7 @@ class GrammarMapper
             }
 
             //FiniteAutomatonService::add_error_state_to_afd($grammar1, $grammar1->get_all_terminals());
-            FiniteAutomatonService::set_unreachable_rules($grammar1);
+            $this->finite_automaton_service->set_unreachable_rules($grammar1);
 
             CommandLineHelper::print_green_message("Successfully merged grammars from file");
 

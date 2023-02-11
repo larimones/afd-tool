@@ -2,3 +2,4 @@
 .idea/
 composer.lock
 /output_files/
+error_log

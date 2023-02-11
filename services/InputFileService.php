@@ -7,11 +7,12 @@ use Helpers\StringHelper;
 
 class InputFileService
 {
+
     /**
      * @param string $path
      * @return array
      */
-    public static function get_and_validate_grammar_file(string $path) : array
+    public function get_and_validate_grammar_file(string $path) : array
     {
         @$file = file_get_contents($path);
 
@@ -27,7 +28,7 @@ class InputFileService
      * @param array $file_data
      * @return array
      */
-    public static function get_tokens_from_grammar_file(array $file_data): array
+    public function get_tokens_from_grammar_file(array $file_data): array
     {
         $tokens = [];
 
@@ -44,7 +45,7 @@ class InputFileService
      * @param array $file_data
      * @return array
      */
-    public static function get_grammar_from_grammar_file(array $file_data) : array
+    public function get_grammar_from_grammar_file(array $file_data) : array
     {
         $ra_rules = [];
 

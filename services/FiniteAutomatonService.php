@@ -2,17 +2,19 @@
 
 namespace Services;
 
+use Configuration\Configuration;
 use Entities\Grammar;
 use Entities\Production;
 use Entities\Rule;
 
 class FiniteAutomatonService
 {
+
     /**
      * @param Grammar $grammar
      * @return void
      */
-    public static function transform_grammar_in_deterministic_finite_automaton(Grammar $grammar): void
+    public function transform_grammar_in_deterministic_finite_automaton(Grammar $grammar): void
     {
         FiniteAutomatonService::unset_unreachable_rules($grammar);
         $terminals = $grammar->get_all_terminals();
@@ -98,7 +100,7 @@ class FiniteAutomatonService
      * @param Grammar $grammar
      * @return void
      */
-    public static function set_unreachable_rules(Grammar $grammar): void
+    public function set_unreachable_rules(Grammar $grammar): void
     {
         $unreachable_rules = $grammar->get_unreachable_rules();
 
@@ -115,7 +117,7 @@ class FiniteAutomatonService
      * @param Grammar $grammar
      * @return void
      */
-    private static function unset_unreachable_rules(Grammar $grammar): void
+    private function unset_unreachable_rules(Grammar $grammar): void
     {
         foreach ($grammar->get_rules() as $rule) {
             $rule->set_is_reachable(null);
@@ -127,13 +129,11 @@ class FiniteAutomatonService
      * @param array $terminals
      * @return void
      */
-    public static function add_error_state_to_afd(Grammar $grammar, array $terminals): void
+    public function add_error_state_to_afd(Grammar $grammar, array $terminals): void
     {
-        $error_rule_name = "-";
+        $error_rule_name = Configuration::get_err_rule_name();
         $error_rule = new Rule($error_rule_name, true);
 
-        /*
-         * REMOVED BECAUSE THE ERR STATE SHOULD NOT BE VIEWED AS AN STATE FOR THE REST OF THE GRAMMAR
         foreach ($terminals as $terminal) {
             $production = new Production();
             $production->set_terminal($terminal);
@@ -147,7 +147,7 @@ class FiniteAutomatonService
                 $terminal = key($non_terminals_by_terminal);
                 $reachable_rules = array_values($non_terminals_by_terminal);
 
-                if (count($reachable_rules) == 1 and $reachable_rules[0][0] == "-") {
+                if (count($reachable_rules) == 1 and $reachable_rules[0][0] == Configuration::get_empty_transition_symbol()) {
                     $production = new Production();
                     $production->set_non_terminal($error_rule_name);
                     $production->set_terminal($terminal);
@@ -156,7 +156,6 @@ class FiniteAutomatonService
                 }
             }
         }
-        */
 
         $grammar->add_rule($error_rule);
     }

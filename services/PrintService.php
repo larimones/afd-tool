@@ -2,10 +2,12 @@
 
 namespace Services;
 
+use Configuration\Configuration;
 use Entities\Grammar;
 
 class PrintService
 {
+
     /**
      * @param Grammar $grammar
      * @return void
@@ -16,16 +18,16 @@ class PrintService
 
         foreach ($grammar->get_rules() as $rule) {
             if ($rule->get_is_final() == true) {
-                print("*");
+                print(Configuration::get_final_rule_symbol());
             }
             if ($rule->get_is_initial() == true) {
-                print("->");
+                print(Configuration::get_init_rule_symbol());
             }
             if ($rule->is_dead() == true) {
-                print("+");
+                print(Configuration::get_dead_rule_symbol());
             }
             if (json_encode($rule->get_is_reachable()) == "false") {
-                print("o");
+                print(Configuration::get_unreachable_rule_symbol());
             }
             print(" {$rule->get_name()} |");
             foreach ($rule->get_non_terminals_by_terminals($terminals) as $non_terminals_by_terminal) {
@@ -49,6 +51,12 @@ class PrintService
      */
     public static function matrix_to_file(array $matrix, string $file_name, string $title): void
     {
+        $err_rule_symbol = Configuration::get_err_rule_name();
+        $init_rule_symbol = Configuration::get_init_rule_symbol();
+        $final_rule_symbol = Configuration::get_final_rule_symbol();
+        $dead_rule_symbol = Configuration::get_dead_rule_symbol();
+        $unreachable_rule_symbol = Configuration::get_unreachable_rule_symbol();
+
         $fp = fopen("{$file_name}.html", 'w');
         fwrite($fp, "<html><head><meta charset='UTF-8'></head><body>");
         fwrite($fp, "<table style='text-align: center; margin:auto;'><tr><td>Universidade Federal Da Fronteira Sul</td></tr><tr><td>Componente Curricular: Linguagens formais e autômatos</td></tr><tr><td>Professor(a):	Braulio Adriano de Mello</td></tr><tr><td>Acadêmicos(as): Larissa Mones Bedin e Matheus Vieira Santos</td></tr><tr><td>Curso: Ciência Da Computação</td></tr></table>");
@@ -67,7 +75,7 @@ class PrintService
         }
         fwrite($fp, "</table>");
         fwrite($fp, "<br />");
-        fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >    <tr>        <td colspan='2'>Legenda</td>    </tr>    <tr>        <td width='50px'>→</td>        <td width='200px'>Estado Inicial</td>    </tr>    <tr>        <td>*</td>        <td>Estado Final</td>    </tr>    <tr>        <td>∞</td>        <td>Estado Inalcançável</td>    </tr>    <tr>        <td>✝</td>        <td>Estado Morto</td>    </tr><tr>        <td>-</td>        <td>Estado de Erro</td>    </tr></table>");
+        fwrite($fp, "<table border='1' style='text-align: center; margin:auto; border: 1px solid black; border-collapse: collapse;' >    <tr>        <td colspan='2'>Legenda</td>    </tr>    <tr>        <td width='50px'>{$init_rule_symbol}</td>        <td width='200px'>Estado Inicial</td>    </tr>    <tr>        <td>{$final_rule_symbol}</td>        <td>Estado Final</td>    </tr>    <tr>        <td>{$unreachable_rule_symbol}</td>        <td>Estado Inalcançável</td>    </tr>    <tr>        <td>{$dead_rule_symbol}</td>        <td>Estado Morto</td>    </tr><tr>        <td>{$err_rule_symbol}</td>        <td>Estado de Erro</td>    </tr></table>");
         fwrite($fp, "</body></html>");
 
         fclose($fp);
@@ -96,19 +104,19 @@ class PrintService
             $characteristics = [];
 
             if (json_encode($rule->get_is_reachable()) == "false") {
-                $characteristics[] = "∞";
+                $characteristics[] = Configuration::get_unreachable_rule_symbol();
             }
 
             if ($rule->is_dead()) {
-                $characteristics[] = "✝";
+                $characteristics[] = Configuration::get_dead_rule_symbol();
             }
 
             if ($rule->get_is_final()) {
-                $characteristics[] = "*";
+                $characteristics[] = Configuration::get_final_rule_symbol();
             }
 
             if ($rule->get_is_initial()) {
-                $characteristics[] = "→";
+                $characteristics[] = Configuration::get_init_rule_symbol();
             }
 
             $matrix[$i][0] = join(" ", $characteristics);

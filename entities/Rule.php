@@ -2,6 +2,8 @@
 
 namespace Entities;
 
+use Configuration\Configuration;
+
 class Rule
 {
     /**
@@ -120,7 +122,7 @@ class Rule
             }
 
             if (!$found)
-                $non_terminals[] = "-";
+                $non_terminals[] = Configuration::get_empty_transition_symbol();
 
             $non_terminals = array_unique($non_terminals);
 

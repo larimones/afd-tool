@@ -5,13 +5,16 @@
     "kevinlebrun/colors.php": "1.0.*",
     "ext-json": "*",
     "ext-pdo": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "symfony/dependency-injection": "^6.2",
+    "symfony/dotenv": "^6.2"
   },
   "autoload": {
     "psr-4": {
       "Entities\\": "entities/",
       "Helpers\\": "helpers/",
-      "Services\\": "services/"
+      "Services\\": "services/",
+      "Configuration\\": "configuration/"
     }
   }
 }
