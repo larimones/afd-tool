@@ -12,7 +12,7 @@ class InputFileService
      * @param string $path
      * @return array
      */
-    public function get_and_validate_grammar_file(string $path) : array
+    public function get_and_validate_file_content(string $path) : array
     {
         @$file = file_get_contents($path);
 
@@ -57,5 +57,4 @@ class InputFileService
 
         return $ra_rules;
     }
-
 }

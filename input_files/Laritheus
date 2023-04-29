@@ -1,0 +1,49 @@
+linguagem baseada em pascal
+toda a linguagem é em minusculo
+sempre tem ; no final das linhas
+entre todos os tokens sempre haverá o separador " " espaço em branco
+linguagem é baseada em begins e ends
+
+program -- iniciar o programa
+if - se
+then - então
+else - senao
+begin - inicio
+end - fim
+; - termino de linahs
+. - termino do programa
+( - parenteses para condicionais e contas e afins
+) - parenteses para condicionais e contas e afins
+> - operador lógico maior
+< - operador lógico menor
+>= - operador lógico maior ou igual
+<= - operador lógico menor ou igual
+= - operador logico igual
+!= - operador lógico diferente
+:= - atribuição de valor para var
+! - operador lógico de negação
+while - laço enquanto
+for - laço para
+repeat - laço repita
+until - laço repita
+read - ler do teclado
+write - escrever na tela
++ - operador de soma
+- - operador de subtraçao
+/ - operador de divisao
+* - operador de multiplicacao
+% - operador de resto
+div - operador de divisao inteira
+// - marcador de comentário
+int
+string
+decimal
+
+regras para permitir a criação de vars
+vars só podem começar por letras, mas depois podem possuir _ e - e numeros
+strings só podem ter numeros/letras/ponto
+<S> ::= a<A> | b<A> | c<A> | d<A> | e<A> | f<A> | g<A> | h<A> | i<A> | j<A> | k<A> | l<A> | m<A> | n<A> | o<A> | p<A> | q<A> | r<A> | s<A> | t<A> | u<A> | v<A> | w<A> | x<A> | y<A> | z<A> | 0<B> | 1<B>| 2<B>| 3<B>| 4<B>| 5<B>| 6<B>| 7<B>| 8<B>| 9<B> | "<D>
+<A> ::= a<A> | b<A> | c<A> | d<A> | e<A> | f<A> | g<A> | h<A> | i<A> | j<A> | k<A> | l<A> | m<A> | n<A> | o<A> | p<A> | q<A> | r<A> | s<A> | t<A> | u<A> | v<A> | w<A> | x<A> | y<A> | z<A> | 0<A> | 1<A>| 2<A>| 3<A>| 4<A>| 5<A>| 6<A>| 7<A>| 8<A>| 9<A>| _<A> | -<A> | ε
+<B> ::= 0<B> | 1<B>| 2<B>| 3<B>| 4<B>| 5<B>| 6<B>| 7<B>| 8<B>| 9<B> | ,<C> | ε
+<C> ::= 0<C> | 1<C>| 2<C>| 3<C>| 4<C>| 5<C>| 6<C>| 7<C>| 8<C>| 9<C>
+<D> ::= a<D> | b<D> | c<D> | d<D> | e<D> | f<D> | g<D> | h<D> | i<D> | j<D> | k<D> | l<D> | m<D> | n<D> | o<D> | p<D> | q<D> | r<D> | s<D> | t<D> | u<D> | v<D> | w<D> | x<D> | y<D> | z<D> | 0<D> | 1<D>| 2<D>| 3<D>| 4<D>| 5<D>| 6<D>| 7<D>| 8<D>| 9<D> | .<D> | ε

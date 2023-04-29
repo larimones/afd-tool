@@ -145,4 +145,11 @@ class Grammar
 
         return $dead_states;
     }
+
+    /**
+     * @return Rule|null
+     */
+    public  function get_init_rule(): ?Rule {
+        return $this->get_rule_by_name(Configuration::get_init_rule_name());
+    }
 }
