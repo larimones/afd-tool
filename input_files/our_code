@@ -1,8 +1,0 @@
-program identificador;
-begin
-int teste := 10;
-if (teste = 10) then
-begin
-write("teste");
-end;
-end.
