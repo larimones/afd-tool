@@ -104,7 +104,7 @@ class GrammarMapper
      * @param Grammar $grammar2
      * @return mixed
      */
-    public function unify_grammars(Grammar $grammar1, Grammar $grammar2): Grammar
+    public function unify_grammars(?Grammar $grammar1, ?Grammar $grammar2): ?Grammar
     {
         if (!isset($grammar1) and isset($grammar2)) {
             return $grammar2;

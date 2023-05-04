@@ -3,6 +3,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/dependency-injection.php';
 
+use Configuration\Configuration;
 use Entities\Grammar;
 use Garden\Cli\Cli;
 use Helpers\CommandLineHelper;
@@ -52,22 +53,49 @@ try {
     $grammar = $grammar_mapper->unify_grammars($grammar_from_tokens, $grammar_from_file);
     $finite_automaton_service->transform_grammar_in_deterministic_finite_automaton($grammar);
 
-    $code_lines = $input_file_service->get_and_validate_file_content($grammar_path);
+    $code_lines = $input_file_service->get_and_validate_file_content($code_path);
+
+    $fp1 = fopen('fita.csv', 'w');
+    $fita = [];
+    $fp2 = fopen('tabela_simbolos.csv', 'w');
+    $tabela_simbolos = [];
 
     foreach ($code_lines as $code_line){
         //faço o algoritmo da aula que é uma loucura
         // é nesse sentido
-        $rule = $grammar->get_init_rule();
 
-        $next_rule = $rule->get_non_terminal_by_terminal();
+        $tokens_in_line = explode(" ", $code_line);
 
-        while ($next_rule != null || ){
-            $rule = $grammar->get_rule_by_name($next_rule);
+        foreach ($tokens_in_line as $token){
+            if ($token == "while")
+                sleep(2);
 
-            $next_rule = $rule->get_non_terminal_by_terminal();
+            $rule = $grammar->get_init_rule();
+
+            for ($i = 0; $i < strlen($token); $i++){
+                $next_rule = $rule->get_non_terminal_by_terminal($token[$i]);
+
+                if ($next_rule == null)
+                    break;
+                
+                $rule = $grammar->get_rule_by_name($next_rule);
+            }
+
+            if ($rule->get_is_final()) {
+                fputcsv($fp1, [$rule->get_name()]);
+                array_push($fita, $rule->get_name());
+                fputcsv($fp2, [0, $token, 0]);
+                array_push($tabela_simbolos, [0, $token, 0]);
+            }
+            else {
+                fputcsv($fp1, [$rule->get_name()]);
+                array_push($fita, Configuration::get_err_rule_name());
+            }
         }
     }
 
+    //var_dump($fita);
+    //var_dump($tabela_simbolos);
 
 } catch (Exception $e) {
     CommandLineHelper::print_magenta_message("Oops, we found an error while processing your request, please contact our development team to solve it.");

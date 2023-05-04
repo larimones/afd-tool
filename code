@@ -1,0 +1,12 @@
+program meuprograma ;
+begin
+int teste := 10 ;
+if ( teste = 10 ) then
+begin
+write ( "teste" ) ;
+end ;
+else
+begin
+write ( "teste1" ) ;
+end ;
+end .
