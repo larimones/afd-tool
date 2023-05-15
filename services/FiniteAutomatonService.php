@@ -35,6 +35,8 @@ class FiniteAutomatonService
 
                 $non_terminals = array_values($non_terminals_by_terminal)[0];
 
+                sort($non_terminals);
+
                 if (count($non_terminals) <= 1) {
                     continue;
                 } else {
