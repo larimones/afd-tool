@@ -30,6 +30,7 @@ class FiniteAutomatonService
             $rule = $rules[$j];
 
             $non_terminals_by_terminals = $rule->get_non_terminals_by_terminals($terminals);
+
             foreach ($non_terminals_by_terminals as $non_terminals_by_terminal) {
                 $terminal = key($non_terminals_by_terminal);
 
@@ -57,16 +58,10 @@ class FiniteAutomatonService
 
                             foreach ($terminals as $t) {
                                 $productions = [];
-                                $string_of_productions = "";
                                 foreach ($reference_rule->get_productions_by_terminal($t) as $production) {
                                     $productions[] = $production->get_non_terminal();
-                                    $string_of_productions .= $production->get_non_terminal();
                                 }
 
-                                $string_of_productions = str_replace("[", "", $string_of_productions);
-                                $string_of_productions = str_replace("]", "", $string_of_productions);
-
-                                //$array_of_productions = array_unique(str_split($string_of_productions));
                                 $array_of_productions = array_unique($productions);
 
                                 foreach ($array_of_productions as $productions_name) {
@@ -97,7 +92,7 @@ class FiniteAutomatonService
             $j++;
         }
 
-        FiniteAutomatonService::add_error_state_to_afd($grammar, $terminals);
+        //FiniteAutomatonService::add_error_state_to_afd($grammar, $terminals);
         FiniteAutomatonService::set_unreachable_rules($grammar);
     }
 

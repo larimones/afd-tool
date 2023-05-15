@@ -67,19 +67,17 @@ try {
         $tokens_in_line = explode(" ", $code_line);
 
         foreach ($tokens_in_line as $token){
-            if ($token == "while")
-                sleep(2);
 
             $rule = $grammar->get_init_rule();
 
-            for ($i = 0; $i < strlen($token); $i++){
+            $i = 0;
+
+            do {
                 $next_rule = $rule->get_non_terminal_by_terminal($token[$i]);
 
-                if ($next_rule == null)
-                    break;
-                
-                $rule = $grammar->get_rule_by_name($next_rule);
-            }
+                $rule = ($next_rule != null) ? $grammar->get_rule_by_name($next_rule) : $rule;
+                $i++;
+            } while ($i < strlen($token));
 
             if ($rule->get_is_final()) {
                 fputcsv($fp1, [$rule->get_name()]);
