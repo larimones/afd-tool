@@ -60,82 +60,82 @@ class StringHelper
         for ($i = 0; $i <= $number; $i = $i + 27) {
             switch ($check) {
                 case 0:
-                    $var = "{$var}A";
-                    break;
-                case 1:
-                    $var = "{$var}B";
-                    break;
-                case 2:
-                    $var = "{$var}C";
-                    break;
-                case 3:
-                    $var = "{$var}D";
-                    break;
-                case 4:
-                    $var = "{$var}E";
-                    break;
-                case 5:
-                    $var = "{$var}F";
-                    break;
-                case 6:
-                    $var = "{$var}G";
-                    break;
-                case 7:
-                    $var = "{$var}H";
-                    break;
-                case 8:
-                    $var = "{$var}I";
-                    break;
-                case 9:
-                    $var = "{$var}J";
-                    break;
-                case 10:
-                    $var = "{$var}K";
-                    break;
-                case 11:
-                    $var = "{$var}L";
-                    break;
-                case 12:
-                    $var = "{$var}M";
-                    break;
-                case 13:
-                    $var = "{$var}N";
-                    break;
-                case 14:
-                    $var = "{$var}O";
-                    break;
-                case 15:
-                    $var = "{$var}P";
-                    break;
-                case 16:
-                    $var = "{$var}Q";
-                    break;
-                case 17:
-                    $var = "{$var}R";
-                    break;
-                case 18:
-                    $var = "{$var}S";
-                    break;
-                case 19:
-                    $var = "{$var}T";
-                    break;
-                case 20:
-                    $var = "{$var}U";
-                    break;
-                case 21:
-                    $var = "{$var}V";
-                    break;
-                case 22:
-                    $var = "{$var}W";
-                    break;
-                case 23:
-                    $var = "{$var}X";
-                    break;
-                case 24:
                     $var = "{$var}Y";
                     break;
-                case 25:
+                case 1:
                     $var = "{$var}Z";
+                    break;
+                case 2:
+                    $var = "{$var}A";
+                    break;
+                case 3:
+                    $var = "{$var}B";
+                    break;
+                case 4:
+                    $var = "{$var}C";
+                    break;
+                case 5:
+                    $var = "{$var}D";
+                    break;
+                case 6:
+                    $var = "{$var}E";
+                    break;
+                case 7:
+                    $var = "{$var}F";
+                    break;
+                case 8:
+                    $var = "{$var}G";
+                    break;
+                case 9:
+                    $var = "{$var}H";
+                    break;
+                case 10:
+                    $var = "{$var}I";
+                    break;
+                case 11:
+                    $var = "{$var}J";
+                    break;
+                case 12:
+                    $var = "{$var}K";
+                    break;
+                case 13:
+                    $var = "{$var}L";
+                    break;
+                case 14:
+                    $var = "{$var}M";
+                    break;
+                case 15:
+                    $var = "{$var}N";
+                    break;
+                case 16:
+                    $var = "{$var}O";
+                    break;
+                case 17:
+                    $var = "{$var}P";
+                    break;
+                case 18:
+                    $var = "{$var}Q";
+                    break;
+                case 19:
+                    $var = "{$var}R";
+                    break;
+                case 20:
+                    $var = "{$var}S";
+                    break;
+                case 21:
+                    $var = "{$var}T";
+                    break;
+                case 22:
+                    $var = "{$var}U";
+                    break;
+                case 23:
+                    $var = "{$var}V";
+                    break;
+                case 24:
+                    $var = "{$var}W";
+                    break;
+                case 25:
+                    $var = "{$var}X";
                     break;
             }
         }
