@@ -108,6 +108,8 @@ class Rule
      */
     public function get_non_terminals_by_terminals(array $terminals): array
     {
+        asort($terminals);
+
         $array = [];
 
         foreach ($terminals as $terminal) {
@@ -133,7 +135,7 @@ class Rule
             ];
         }
 
-        arsort($array);
+        ksort($array);
 
         return $array;
     }

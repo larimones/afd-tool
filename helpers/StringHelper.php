@@ -52,13 +52,16 @@ class StringHelper
 
         $var = "";
 
-        if ($number > 26)
+        if ($number >= 26)
             $check = $number % 26;
         else
             $check = $number;
 
         for ($i = 0; $i <= $number; $i = $i + 27) {
             switch ($check) {
+                case 0:
+                    $var = "{$var}Z";
+                    break;
                 case 1:
                     $var = "{$var}S";
                     break;
@@ -133,9 +136,6 @@ class StringHelper
                     break;
                 case 25:
                     $var = "{$var}Y";
-                    break;
-                case 0:
-                    $var = "{$var}Z";
                     break;
             }
         }

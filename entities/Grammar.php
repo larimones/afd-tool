@@ -38,10 +38,10 @@ class Grammar
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @return Rule|null
      */
-    public function get_rule_by_name(string $name): ?Rule
+    public function get_rule_by_name(?string $name): ?Rule
     {
         foreach ($this->rules as $rule) {
             if ($rule->get_name() == $name) {

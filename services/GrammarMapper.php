@@ -82,6 +82,7 @@ class GrammarMapper
                     $production = new Production();
                     $terminal = trim($raw);
                     $production->set_terminal($terminal);
+                    $rule->set_is_final(true);
                 } else {
                     $terminal = StringHelper::regex("/(.)</i", $raw);
                     $non_terminal = StringHelper::regex("/<(.*?)>/i", $raw);

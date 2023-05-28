@@ -53,47 +53,39 @@ try {
     $grammar = $grammar_mapper->unify_grammars($grammar_from_tokens, $grammar_from_file);
     $finite_automaton_service->transform_grammar_in_deterministic_finite_automaton($grammar);
 
+    $afd = $print_service->from_grammar_to_matrix($grammar);
+    $afd_file_name = "output_files/deterministic_finite_automaton";
+    $print_service->matrix_to_file($afd, $afd_file_name, "Autômato Finito Determinístico");
+    CommandLineHelper::print_green_message("Successfully printed AFD into file {$afd_file_name}.html");
+
     $code_lines = $input_file_service->get_and_validate_file_content($code_path);
 
-    $fp1 = fopen('fita.csv', 'w');
+    $code = join(" ", $code_lines) . " ";
+
     $fita = [];
-    $fp2 = fopen('tabela_simbolos.csv', 'w');
     $tabela_simbolos = [];
 
-    foreach ($code_lines as $code_line){
-        //faço o algoritmo da aula que é uma loucura
-        // é nesse sentido
+    $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
 
-        $tokens_in_line = explode(" ", $code_line);
-
-        foreach ($tokens_in_line as $token){
-
-            $rule = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
-
-            $i = 0;
-
-            do {
-                $next_rule = $rule->get_non_terminal_by_terminal($token[$i]);
-
-                $rule = ($next_rule != null) ? $grammar->get_rule_by_name($next_rule) : $rule;
-                $i++;
-            } while ($i < strlen($token));
-
-            if ($rule->get_is_final()) {
-                fputcsv($fp1, [$rule->get_name()]);
-                array_push($fita, $rule->get_name());
-                fputcsv($fp2, [0, $token, 0]);
-                array_push($tabela_simbolos, [0, $token, 0]);
+    foreach (str_split($code) as $character){
+        if ($character == " "){
+            var_dump("state {$e->get_name()} is final: {$e->get_is_final()}");
+            if ($e->get_is_final()){
+                $fita[] = $e->get_name();
+            }else{
+                $fita[] = Configuration::get_err_rule_name();
             }
-            else {
-                fputcsv($fp1, [$rule->get_name()]);
-                array_push($fita, Configuration::get_err_rule_name());
-            }
+            $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
+            $next_rule_name = null;
+        }
+        else {
+            $next_rule_name = $e->get_non_terminal_by_terminal($character);
+            $e = $grammar->get_rule_by_name($next_rule_name) ?? $e;
         }
     }
 
-    //var_dump($fita);
-    //var_dump($tabela_simbolos);
+    var_dump($fita);
+
 
 } catch (Exception $e) {
     CommandLineHelper::print_magenta_message("Oops, we found an error while processing your request, please contact our development team to solve it.");
