@@ -35,10 +35,12 @@ class FiniteAutomatonService
 
                 $non_terminals = array_values($non_terminals_by_terminal)[0];
 
+                sort($non_terminals);
+
                 if (count($non_terminals) <= 1) {
                     continue;
                 } else {
-                    $new_rule_name = "[" . join($non_terminals) . "]";
+                    $new_rule_name = "[" . join(",", $non_terminals) . "]";
 
                     $verify_rule_existence = $grammar->get_rule_by_name($new_rule_name);
 
@@ -54,15 +56,12 @@ class FiniteAutomatonService
                             }
 
                             foreach ($terminals as $t) {
-                                $string_of_productions = "";
+                                $productions = [];
                                 foreach ($reference_rule->get_productions_by_terminal($t) as $production) {
-                                    $string_of_productions .= $production->get_non_terminal();
+                                    $productions[] = $production->get_non_terminal();
                                 }
 
-                                $string_of_productions = str_replace("[", "", $string_of_productions);
-                                $string_of_productions = str_replace("]", "", $string_of_productions);
-
-                                $array_of_productions = array_unique(str_split($string_of_productions));
+                                $array_of_productions = array_unique($productions);
 
                                 foreach ($array_of_productions as $productions_name) {
                                     if ($new_rule->get_production_by_terminal_and_non_terminal($t, $productions_name) != null) {

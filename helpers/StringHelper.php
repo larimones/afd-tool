@@ -134,7 +134,7 @@ class StringHelper
                 case 25:
                     $var = "{$var}Y";
                     break;
-                case 26:
+                case 0:
                     $var = "{$var}Z";
                     break;
             }
