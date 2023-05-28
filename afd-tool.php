@@ -30,7 +30,7 @@ try {
 
     CommandLineHelper::print_white_message("Reading instructions from file");
 
-    $metadata = $input_file_service->get_and_validate_grammar_file($grammar_path);
+    $metadata = $input_file_service->get_and_validate_file_content($grammar_path);
 
     $tokens = $input_file_service->get_tokens_from_grammar_file($metadata);
     if (count($tokens) > 0) {
