@@ -32,7 +32,7 @@ try {
     $code_path = $args->getOpt('c', __DIR__ . $ds . 'code');
 
     // Extract to a service
-    CommandLineHelper::print_white_message("Reading instructions from file");
+    //CommandLineHelper::print_white_message("Reading instructions from file");
 
     $metadata = $input_file_service->get_and_validate_file_content($grammar_path);
 
@@ -40,40 +40,52 @@ try {
     if (count($tokens) > 0) {
         $grammar_from_tokens = new Grammar();
         $grammar_mapper->from_tokens($grammar_from_tokens, $tokens);
-        CommandLineHelper::print_green_message("Successfully processed tokens from file");
+        //CommandLineHelper::print_green_message("Successfully processed tokens from file");
     }
+    CommandLineHelper::print_green_message("Depois de ler tokens");
+    var_dump($grammar_from_tokens->get_rule_by_name("AAA")->get_is_final());
+    var_dump($grammar_from_tokens->get_rule_by_name("SS")->get_is_final());
 
     $grammar_from_file_as_array = $input_file_service->get_grammar_from_grammar_file($metadata);
     if (count($grammar_from_file_as_array) > 0) {
         $grammar_from_file = new Grammar();
         $grammar_mapper->from_bnf_regular_grammar($grammar_from_file, $grammar_from_file_as_array);
-        CommandLineHelper::print_green_message("Successfully processed BNF grammar from file");
+        //CommandLineHelper::print_green_message("Successfully processed BNF grammar from file");
     }
 
     $grammar = $grammar_mapper->unify_grammars($grammar_from_tokens, $grammar_from_file);
+
+    CommandLineHelper::print_green_message("Depois de unificar grammars");
+    var_dump($grammar->get_rule_by_name("AAA")->get_is_final());
+    var_dump($grammar->get_rule_by_name("SS")->get_is_final());
+
     $finite_automaton_service->transform_grammar_in_deterministic_finite_automaton($grammar);
+
+    CommandLineHelper::print_green_message("Depois de converter em afd");
+    var_dump($grammar->get_rule_by_name("AAA")->get_is_final());
+    var_dump($grammar->get_rule_by_name("SS")->get_is_final());
 
     $afd = $print_service->from_grammar_to_matrix($grammar);
     $afd_file_name = "output_files/deterministic_finite_automaton";
     $print_service->matrix_to_file($afd, $afd_file_name, "Autômato Finito Determinístico");
-    CommandLineHelper::print_green_message("Successfully printed AFD into file {$afd_file_name}.html");
+    //CommandLineHelper::print_green_message("Successfully printed AFD into file {$afd_file_name}.html");
 
     $code_lines = $input_file_service->get_and_validate_file_content($code_path);
 
     $code = join(" ", $code_lines) . " ";
 
-    $fita = [];
+    $fp1 = fopen('fita.csv', 'w');
     $tabela_simbolos = [];
 
     $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
 
     foreach (str_split($code) as $character){
         if ($character == " "){
-            var_dump("state {$e->get_name()} is final: {$e->get_is_final()}");
+            //var_dump("state {$e->get_name()} is final: {$e->get_is_final()}");
             if ($e->get_is_final()){
-                $fita[] = $e->get_name();
+                fputcsv($fp1, [$e->get_name()]);
             }else{
-                $fita[] = Configuration::get_err_rule_name();
+                fputcsv($fp1, [Configuration::get_err_rule_name(), $e->get_name()]);
             }
             $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
             $next_rule_name = null;
@@ -83,8 +95,6 @@ try {
             $e = $grammar->get_rule_by_name($next_rule_name) ?? $e;
         }
     }
-
-    var_dump($fita);
 
 
 } catch (Exception $e) {
