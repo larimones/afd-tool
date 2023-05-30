@@ -14,6 +14,8 @@ decimal
 string
 bool
 true
+false
+for
 .
 ;
 (
@@ -32,8 +34,6 @@ true
 *
 %
 //
-false
-for
 <A> ::= _<B> | 0<C> | 1<C>| 2<C>| 3<C>| 4<C>| 5<C>| 6<C>| 7<C>| 8<C>| 9<C> | "<E>
 <B> ::= a<B> | b<B> | c<B> | d<B> | e<B> | f<B> | g<B> | h<B> | i<B> | j<B> | k<B> | l<B> | m<B> | n<B> | o<B> | p<B> | q<B> | r<B> | s<B> | t<B> | u<B> | v<B> | w<B> | x<B> | y<B> | z<B> | 0<B> | 1<B>| 2<B>| 3<B>| 4<B>| 5<B>| 6<B>| 7<B>| 8<B>| 9<B>| _<B> | -<B> | ε
 <C> ::= 0<C> | 1<C>| 2<C>| 3<C>| 4<C>| 5<C>| 6<C>| 7<C>| 8<C>| 9<C> | ,<D> | ε

@@ -40,60 +40,105 @@ try {
     if (count($tokens) > 0) {
         $grammar_from_tokens = new Grammar();
         $grammar_mapper->from_tokens($grammar_from_tokens, $tokens);
-        //CommandLineHelper::print_green_message("Successfully processed tokens from file");
     }
-    CommandLineHelper::print_green_message("Depois de ler tokens");
 
     $grammar_from_file_as_array = $input_file_service->get_grammar_from_grammar_file($metadata);
     if (count($grammar_from_file_as_array) > 0) {
         $grammar_from_file = new Grammar();
         $grammar_mapper->from_bnf_regular_grammar($grammar_from_file, $grammar_from_file_as_array);
-        //CommandLineHelper::print_green_message("Successfully processed BNF grammar from file");
     }
 
     $grammar = $grammar_mapper->unify_grammars($grammar_from_tokens, $grammar_from_file);
-
-    CommandLineHelper::print_green_message("Depois de unificar grammars");
-
     $finite_automaton_service->transform_grammar_in_deterministic_finite_automaton($grammar);
-
-    CommandLineHelper::print_green_message("Depois de converter em afd");
-
     $afd = $print_service->from_grammar_to_matrix($grammar);
     $afd_file_name = "output_files/deterministic_finite_automaton";
-    //$print_service->matrix_to_file($afd, $afd_file_name, "Autômato Finito Determinístico");
-    //CommandLineHelper::print_green_message("Successfully printed AFD into file {$afd_file_name}.html");
+    $print_service->matrix_to_file($afd, $afd_file_name, "Autômato Finito Determinístico");
 
     $code_lines = $input_file_service->get_and_validate_file_content($code_path);
 
+    $lines_size = [];
+
+    for ($i =0; $i < count($code_lines); $i++){
+        $lines_size[] = [
+            "line" => $i + 1,
+            //conta mais por que juntamos as linhas com separador
+            "size" => count(str_split($code_lines[$i])) + 1
+        ];
+    }
+
     $code = join(" ", $code_lines) . " ";
 
-    //$fp1 = fopen('fita.csv', 'w');
-    $fita = [];
+    $fp1 = fopen('fita.csv', 'w');
+    $fp2 = fopen("tabela_tokens.csv", "w");
+    fputcsv($fp2, ["id", "rotulo", "linha"]);
+    $table = [];
 
     $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
 
-    foreach (str_split($code) as $character){
-        if ($character == " "){
-            //var_dump("state {$e->get_name()} is final: {$e->get_is_final()}");
-            if ($e->get_is_final()){
-				$fita[] = $e->get_name();
-                //fputcsv($fp1, [$e->get_name()]);
-            }else{
-				$fita[] = "{$e->get_name()},{ERR}";
-                //fputcsv($fp1, [Configuration::get_err_rule_name(), $e->get_name()]);
+    $token = null;
+
+    $number_of_tokens_read = 0;
+
+    foreach (str_split($code) as $character) {
+        if ($character == " ") {
+
+            $acumulador = 0;
+
+            foreach ($lines_size as $line_size){
+                $acumulador += $line_size["size"];
+
+                if ($number_of_tokens_read <= $acumulador){
+                    $line = $line_size["line"];
+                    break;
+                }
+            }
+
+            if ($e->get_is_final()) {
+                //is int
+                if ($e->get_name() == "DH") {
+                    fputcsv($fp1, ["integer", $token]);
+                } // is decimal
+                else if ($e->get_name() == "DI") {
+                    fputcsv($fp1, ["decimal", $token]);
+                } //is id // string or var
+                else if ($e->get_name() == "DJ" or $e->get_name() == "DG") {
+                    $id = null;
+                    foreach ($table as $item){
+                        if ($item["rotulo"] == $token){
+                            $id = $item["id"];
+                            break;
+                        }
+                    }
+
+                    if ($id == null){
+                        $id = count($table) + 1;
+
+                        $table[] = [
+                            "id" => $id,
+                            "rotulo" => $token,
+                            "linha" => $line
+                        ];
+
+                        fputcsv($fp2, [$id, $token, $line]);
+                    }
+
+                    fputcsv($fp1, ["id", $id]);
+                } else {
+                    fputcsv($fp1, [$e->get_name()]);
+                }
+            } else {
+                fputcsv($fp1, [Configuration::get_err_rule_name(), $e->get_name(), $line]);
             }
             $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
             $next_rule_name = null;
-        }
-        else {
+            $token = null;
+        } else {
+            $token .= $character;
             $next_rule_name = $e->get_non_terminal_by_terminal($character);
             $e = $grammar->get_rule_by_name($next_rule_name) ?? $e;
         }
+        $number_of_tokens_read++;
     }
-
-	var_dump($fita);
-
 
 } catch (Exception $e) {
     CommandLineHelper::print_magenta_message("Oops, we found an error while processing your request, please contact our development team to solve it.");
