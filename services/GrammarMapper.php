@@ -28,7 +28,7 @@ class GrammarMapper
         $count_of_rules = count($grammar->get_rules());
 
         foreach ($tokens as $token) {
-            $token = trim($token);
+//            $token = trim($token);
             $token_as_array = array_filter(str_split($token));
 
             for ($i = 0; $i < count($token_as_array); $i++) {
