@@ -107,5 +107,7 @@ class LexicalAnalyserService
             }
             $number_of_tokens_read++;
         }
+
+        $tape[] = "$";
     }
 }
