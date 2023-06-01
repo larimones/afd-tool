@@ -4,7 +4,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
-$dotenv->load(__DIR__.'/.env');
+$dotenv->load(__DIR__.'/../.env');
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->register('FiniteAutomatonService', \Services\FiniteAutomatonService::class);

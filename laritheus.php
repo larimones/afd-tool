@@ -1,9 +1,8 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/dependency-injection.php';
+require_once __DIR__ . '/configuration/dependency-injection.php';
 
-use Entities\Grammar;
 use Garden\Cli\Cli;
 use Helpers\CommandLineHelper;
 
