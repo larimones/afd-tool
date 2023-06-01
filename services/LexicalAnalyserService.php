@@ -81,8 +81,14 @@ class LexicalAnalyserService
 
                         $tape[] = "id,{$id}";
                     }
+                    // is an error
+                    else if ($e->get_name() == Configuration::get_err_rule_name()) {
+                        $tape[] = Configuration::get_err_rule_name() . ",{$token},{$line}";
+                        CommandLineHelper::print_magenta_message("Lexical error: Token {$token} on line {$line} was not recognized");
+                    }
                     // is key word
                     else {
+
                         $tape[] = $e->get_name();
                     }
                 }
