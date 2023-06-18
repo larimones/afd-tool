@@ -1,0 +1,31 @@
+program _meuprograma ;
+begin
+integer _teste := 10 + 1 ;
+if ( _teste = 10 ) then
+begin
+string _my_string := "teste" ;
+write ( _my_string ) ;
+end ;
+else
+begin
+write ( "teste1" ) ;
+end ;
+read ( _teste ) ;
+while ( ( _teste - 1 ) != 10 )
+begin
+write ( "testado_while" ) ;
+end ;
+decimal _idk := 11,8 / 2 ;
+repeat
+begin
+write ( "testado_repeat" ) ;
+end ;
+until ( ( _idk * 1 ) > 11,9 ) ;
+bool _mybool := true ;
+bool _mybool-2 := false ;
+integer _j := 1 ;
+for ( _j := 0 ; _j < 10 ; _j := _j + 1 )
+begin
+write ( _j ) ;
+end ;
+end .

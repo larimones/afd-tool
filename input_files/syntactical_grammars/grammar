@@ -1,0 +1,43 @@
+<program> ::= 'program' <identifier> ';' <block> '.'
+
+<block> ::= 'begin' <declaration_list> <statement_list> 'end'
+
+<declaration_list> ::= <declaration> <declaration_list> | ε
+
+<declaration> ::= <type> <identifier> ':=' <literal> ';'
+
+<statement_list> ::= <statement> <statement_list> | ε
+
+<statement> ::= <assignment_statement> | <if_statement> | <write_statement>
+
+<assignment_statement> ::= <identifier> ':=' <expression> ';'
+
+<if_statement> ::= 'if' '(' <expression> ')' 'then' <block> 'else' <block> ';'
+
+<write_statement> ::= 'write' '(' <literal> ')' ';'
+
+<expression> ::= <identifier> <comparison_operator> <literal>
+
+<comparison_operator> ::= '='
+
+<identifier> ::= '_' <id_value>
+
+<id_value> ::= <letter> <id_value_tail>
+
+<id_value_tail> ::= <letter> <id_value_tail> | <digit> <id_value_tail> | ε
+
+<literal> ::= <integer_literal> | <string_literal>
+
+<integer_literal> ::= <digit> <digit_list>
+
+<digit_list> ::= <digit> <digit_list> | ε
+
+<string_literal> ::= '"' <character_list> '"'
+
+<character_list> ::= <character> <character_list> | ε
+
+<character> ::= <letter> | <digit> | '_'
+
+<letter> ::= 'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
+
+<digit> ::= '0' | '1' | ... | '9'
