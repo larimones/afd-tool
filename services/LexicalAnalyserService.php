@@ -52,15 +52,15 @@ class LexicalAnalyserService
 
                 if ($e->get_is_final()) {
                     // is int
-                    if ($e->get_name() == "DH") {
+                    if ($e->get_name() == "CZ") {
                         $tape[] = "integer,{$token}";
                     }
                     // is decimal
-                    else if ($e->get_name() == "DI") {
+                    else if ($e->get_name() == "DA") {
                         $tape[] = "decimal,{$token}";
                     }
-                    // is id
-                    else if ($e->get_name() == "DJ" or $e->get_name() == "DG") {
+                    // is id, var or string
+                    else if ($e->get_name() == "CY" or $e->get_name() == "DB") {
                         $id = null;
                         foreach ($symbol_table as $item){
                             if ($item["rotulo"] == $token){
@@ -88,8 +88,7 @@ class LexicalAnalyserService
                     }
                     // is key word
                     else {
-
-                        $tape[] = $e->get_name();
+                        $tape[] = "{$e->get_name()},{$token}";
                     }
                 }
                 // is error

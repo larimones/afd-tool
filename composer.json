@@ -7,7 +7,8 @@
     "ext-pdo": "*",
     "ext-mbstring": "*",
     "symfony/dependency-injection": "^6.2",
-    "symfony/dotenv": "^6.2"
+    "symfony/dotenv": "^6.2",
+    "scotteh/php-dom-wrapper": "^2.0"
   },
   "autoload": {
     "psr-4": {
