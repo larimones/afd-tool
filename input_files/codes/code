@@ -1,6 +1,5 @@
 program _meuprograma ;
 begin
-integer _teste := 10 ;
 if ( _teste = 10 ) then
 begin
 write ( "teste" ) ;

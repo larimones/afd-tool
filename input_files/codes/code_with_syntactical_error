@@ -1,0 +1,5 @@
+program _meuprograma ;
+begin
+write ( "testado_while" ) ;
+write ( "testado_repeat" ) ;
+end .

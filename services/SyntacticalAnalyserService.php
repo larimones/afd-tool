@@ -53,7 +53,6 @@ class SyntacticalAnalyserService
                 break;
             }
 
-
             if ($transition->get_action() == TransitionAction::Shift) {
                 $i++;
                 $state_stack->push($transition->get_next_state());
