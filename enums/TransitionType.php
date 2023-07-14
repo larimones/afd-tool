@@ -1,7 +1,9 @@
 <?php
 
-namespace enums;
+namespace Enums;
 
 enum TransitionType
 {
+    case Action;
+    case Goto;
 }

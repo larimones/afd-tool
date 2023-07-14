@@ -53,11 +53,23 @@ class LexicalAnalyserService
                 if ($e->get_is_final()) {
                     // is int
                     if ($e->get_name() == "CZ") {
-                        $tape[] = "integer,{$token}";
+                        $tape[] = [
+                            "afd_state" => $e->get_name(),
+                            "token_type" => "id",
+                            "const_type" => "integer",
+                            "token_value" => $token,
+                            "line" => $line
+                        ];
                     }
                     // is decimal
                     else if ($e->get_name() == "DA") {
-                        $tape[] = "decimal,{$token}";
+                        $tape[] = [
+                            "afd_state" => $e->get_name(),
+                            "token_type" => "id",
+                            "const_type" => "decimal",
+                            "token_value" => $token,
+                            "line" => $line
+                        ];
                     }
                     // is id, var or string
                     else if ($e->get_name() == "CY" or $e->get_name() == "DB") {
@@ -79,22 +91,40 @@ class LexicalAnalyserService
                             ];
                         }
 
-                        $tape[] = "id,{$id}";
+                        $tape[] = [
+                            "afd_state" => $e->get_name(),
+                            "token_type" => "id",
+                            "id_number" => $id,
+                            "token_value" => $token,
+                            "line" => $line
+                        ];
                     }
                     // is an error
                     else if ($e->get_name() == Configuration::get_err_rule_name()) {
-                        $tape[] = Configuration::get_err_rule_name() . ",{$token},{$line}";
+                        $tape[] = [
+                            "afd_state" => Configuration::get_err_rule_name(),
+                            "token_type" => $token,
+                            "line" => $line
+                        ];
                         CommandLineHelper::print_magenta_message("Lexical error: Token {$token} on line {$line} was not recognized");
                     }
                     // is key word
                     else {
-                        $tape[] = "{$e->get_name()},{$token}";
+                        $tape[] = [
+                            "afd_state" => $e->get_name(),
+                            "token_type" => $token,
+                            "line" => $line
+                        ];
                     }
                 }
                 // is error
                 else {
-                    $tape[] = Configuration::get_err_rule_name() . ",{$token},{$line}";
-                    CommandLineHelper::print_magenta_message("Lexical error: Token {$token} on line {$line} was not recognized");
+                    $tape[] = [
+                        "afd_state" => Configuration::get_err_rule_name(),
+                        "token_type" => $token,
+                        "line" => $line
+                    ];
+                    CommandLineHelper::print_magenta_message("Lexical error: Token '{$token}' on line {$line} was not recognized");
                 }
                 $e = $grammar->get_rule_by_name(Configuration::get_init_rule_name());
                 $next_rule_name = null;
@@ -107,6 +137,22 @@ class LexicalAnalyserService
             $number_of_tokens_read++;
         }
 
-        $tape[] = "$";
+        $tape[] = [
+            "token_type" => "$",
+            "line" => $line
+        ];
+
+        $has_errors = false;
+
+        foreach ($tape as $item){
+            if ($item["token_type"] == Configuration::get_init_rule_name()){
+                $has_errors = true;
+            }
+        }
+
+        if (!$has_errors)
+            CommandLineHelper::print_green_message("Lexical Analysis Completed With No Errors");
+        else
+            exit(0);
     }
 }

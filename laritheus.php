@@ -11,6 +11,7 @@ try {
     $grammar_factory = $containerBuilder->get('GrammarFactory');
     $lexical_analyser_service = $containerBuilder->get('LexicalAnalyserService');
     $parser_table_mapper = $containerBuilder->get('ParserTableMapper');
+    $syntactical_analyser_service = $containerBuilder->get("SyntacticalAnalyserService");
 
     CommandLineHelper::print_yellow_message("Welcome to Laritheus\n");
 
@@ -20,15 +21,17 @@ try {
 
     $cli->description('Implementa o analisador léxico da linguagem Laritheus')
         ->opt('grammar:grammar', 'Caminho para o arquivo com a GR.')
+        ->opt('syntactical_grammar:syntactical_grammar', 'Caminho para o arquivo com a GLC.')
         ->opt('parser:parser', "Caminho para o arquivo com a tabela Parser")
         ->opt('code:code', 'Caminho para o arquivo com o código a ser analisado.');
 
     $args = $cli->parse($argv, true);
 
     $ds = DIRECTORY_SEPARATOR;
-    $grammar_path = $args->getOpt('grammar', __DIR__ . $ds . 'grammar');
-    $code_path = $args->getOpt('code', __DIR__ . $ds . 'code');
-    $parser_path = $args->getOpt('parser', __DIR__ . $ds . 'parser');
+    $grammar_path = $args->getOpt('grammar', "input_files/lexical_grammars/grammar");
+    $code_path = $args->getOpt('code', "input_files/codes/code");
+    $parser_path = $args->getOpt('parser', "input_files/syntactical_grammars/grammar.html");
+    $syntactical_grammar_path = $args->getOpt('syntactical_grammar', "input_files/syntactical_grammars/grammar");
 
     $grammar = $grammar_factory->createGrammar($grammar_path);
 
@@ -37,10 +40,11 @@ try {
 
     $lexical_analyser_service->execute($grammar, $code_path, $symbol_table, $tape);
 
-    //var_dump($tape);
-    //var_dump($symbol_table);
+    $production_number_dictionary = [];
 
-    $parser_table = $parser_table_mapper->convert_file_to_matrix($parser_path);
+    $parser_table = $parser_table_mapper->execute($syntactical_grammar_path, $parser_path, $production_number_dictionary);
+
+    $syntactical_analyser_service->execute($symbol_table, $tape, $parser_table, $production_number_dictionary);
 
 
 } catch (Exception $e) {

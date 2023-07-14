@@ -19,5 +19,7 @@ $containerBuilder->register('GrammarFactory', \Services\GrammarFactory::class)
     ->addArgument($containerBuilder->get("FiniteAutomatonService"));
 $containerBuilder->register('LexicalAnalyserService', \Services\LexicalAnalyserService::class)
     ->addArgument($containerBuilder->get("InputFileService"));
-$containerBuilder->register('ParserTableMapper', \Services\ParserTableMapper::class);
+$containerBuilder->register('ParserTableMapper', \Services\ParserTableMapper::class)
+    ->addArgument($containerBuilder->get("InputFileService"));;
+$containerBuilder->register('SyntacticalAnalyserService', \Services\SyntacticalAnalyserService::class);
 
