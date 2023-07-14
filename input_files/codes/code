@@ -1,0 +1,11 @@
+program _meuprograma ;
+begin
+if ( _teste = 10 ) then
+begin
+write ( "teste" ) ;
+end ;
+else
+begin
+write ( "teste1" ) ;
+end ;
+end .

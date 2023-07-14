@@ -21,16 +21,16 @@ try {
     $cli = new Cli();
 
     $cli->description('Implementa a conversão de GRs em AFDs')
-        ->opt('grammar:g', 'Caminho para o arquivo com a GR.');
+        ->opt('grammar:grammar', 'Caminho para o arquivo com a GR.');
 
     $args = $cli->parse($argv, true);
 
     $ds = DIRECTORY_SEPARATOR;
-    $grammar_path = $args->getOpt('gr', __DIR__ . $ds . 'grammar');
+    $grammar_path = $args->getOpt('grammar', __DIR__ . $ds . 'grammar');
 
     CommandLineHelper::print_white_message("Reading instructions from file");
 
-    $metadata = $input_file_service->get_and_validate_grammar_file($grammar_path);
+    $metadata = $input_file_service->get_and_validate_file_content($grammar_path);
 
     $tokens = $input_file_service->get_tokens_from_grammar_file($metadata);
     if (count($tokens) > 0) {

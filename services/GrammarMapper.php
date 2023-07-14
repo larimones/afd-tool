@@ -28,7 +28,7 @@ class GrammarMapper
         $count_of_rules = count($grammar->get_rules());
 
         foreach ($tokens as $token) {
-            $token = trim($token);
+//            $token = trim($token);
             $token_as_array = array_filter(str_split($token));
 
             for ($i = 0; $i < count($token_as_array); $i++) {
@@ -82,6 +82,7 @@ class GrammarMapper
                     $production = new Production();
                     $terminal = trim($raw);
                     $production->set_terminal($terminal);
+                    $rule->set_is_final(true);
                 } else {
                     $terminal = StringHelper::regex("/(.)</i", $raw);
                     $non_terminal = StringHelper::regex("/<(.*?)>/i", $raw);
@@ -151,10 +152,7 @@ class GrammarMapper
                 }
             }
 
-            //FiniteAutomatonService::add_error_state_to_afd($grammar1, $grammar1->get_all_terminals());
             $this->finite_automaton_service->set_unreachable_rules($grammar1);
-
-            CommandLineHelper::print_green_message("Successfully merged grammars from file");
 
             return $grammar1;
         }

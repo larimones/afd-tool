@@ -108,6 +108,8 @@ class Rule
      */
     public function get_non_terminals_by_terminals(array $terminals): array
     {
+        asort($terminals);
+
         $array = [];
 
         foreach ($terminals as $terminal) {
@@ -133,7 +135,7 @@ class Rule
             ];
         }
 
-        arsort($array);
+        ksort($array);
 
         return $array;
     }
@@ -237,5 +239,18 @@ class Rule
                 sort($this->productions);
             }
         }
+    }
+
+    /**
+     * @param string $terminal
+     * @return string|null
+     */
+    public function get_non_terminal_by_terminal(string $terminal) : ?string {
+        foreach ($this->productions as $production){
+            if ($production->get_terminal() == $terminal){
+                return $production->get_non_terminal();
+            }
+        }
+        return null;
     }
 }

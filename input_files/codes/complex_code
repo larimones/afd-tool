@@ -1,0 +1,18 @@
+program _meuprograma ;
+begin
+if ( _teste = 10 ) then
+begin
+while ( _teste != 10 )
+begin
+write ( "testado_while" ) ;
+end ;
+end ;
+else
+begin
+repeat
+begin
+write ( "testado_repeat" ) ;
+end ;
+until ( 1 > 11,9 ) ;
+end ;
+end .

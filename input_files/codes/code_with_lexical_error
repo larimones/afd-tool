@@ -1,0 +1,12 @@
+proram _meuprograma ;
+begin
+intger _teste := 10 ;
+if ( _teste = 10 ) thn
+begi
+write ( "teste" ) ;
+end ;
+el
+begin
+write ( "teste1 ) ;
+end ;
+end .

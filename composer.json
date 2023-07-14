@@ -7,13 +7,16 @@
     "ext-pdo": "*",
     "ext-mbstring": "*",
     "symfony/dependency-injection": "^6.2",
-    "symfony/dotenv": "^6.2"
+    "symfony/dotenv": "^6.2",
+    "scotteh/php-dom-wrapper": "^2.0",
+    "ext-ds": "*"
   },
   "autoload": {
     "psr-4": {
       "Entities\\": "entities/",
       "Helpers\\": "helpers/",
       "Services\\": "services/",
+      "Enums\\": "enums/",
       "Configuration\\": "configuration/"
     }
   }
